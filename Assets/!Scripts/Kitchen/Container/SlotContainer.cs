@@ -32,7 +32,7 @@ public class SlotContainer : IContainer
 
     public void OpenContainer(ContainerReflectionSystem reflection)
     {
-        reflection.PopulateContainer(containerData);
+        reflection.ReflectContainer(containerData);
         EventManager.OnPreContainerOpened.Invoke();
         EventManager.OnContainerOpened.Invoke();
         IsOpened = true;

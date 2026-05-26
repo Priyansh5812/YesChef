@@ -1,10 +1,10 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ReflectionSlot : MonoBehaviour
+
+public class ReflectionSlot : MonoBehaviour 
 {
     [SerializeField] Image image;
-    
     ReflectionKitchenItem item;
 
     public void Initialize(KitchenItem item, int index)

@@ -8,7 +8,7 @@ public class ContainerReflectionSystem : MonoBehaviour
         slots = this.GetComponentsInChildren<ReflectionSlot>();
     }
 
-    public void PopulateContainer(KitchenItem[] items)
+    public void ReflectContainer(KitchenItem[] items)
     {
         foreach(var i in slots)
             i.gameObject.SetActive(false);
