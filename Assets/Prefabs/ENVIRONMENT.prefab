@@ -1569,6 +1569,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 9066547527230340083, guid: d584b01f48f5ad146b714d162a576a6e, type: 3}
+      propertyPath: m_Size.z
+      value: 4.2756634
+      objectReference: {fileID: 0}
+    - target: {fileID: 9066547527230340083, guid: d584b01f48f5ad146b714d162a576a6e, type: 3}
+      propertyPath: m_Center.x
+      value: -0.08568873
+      objectReference: {fileID: 0}
+    - target: {fileID: 9066547527230340083, guid: d584b01f48f5ad146b714d162a576a6e, type: 3}
+      propertyPath: m_Center.z
+      value: 0.027977094
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1692,6 +1704,14 @@ PrefabInstance:
     - target: {fileID: 5899776879266500275, guid: 8db848eed46e1b84f8f88d42e1ec06db, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9062490179811217224, guid: 8db848eed46e1b84f8f88d42e1ec06db, type: 3}
+      propertyPath: m_data
+      value: 
+      objectReference: {fileID: 11400000, guid: 951abaa7b4fcefa42b42e0e6bee8e8e8, type: 2}
+    - target: {fileID: 9062490179811217224, guid: 8db848eed46e1b84f8f88d42e1ec06db, type: 3}
+      propertyPath: fallbackSlotSize
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

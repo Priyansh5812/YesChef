@@ -12,6 +12,9 @@ public class PlayerController : MonoBehaviour
     Vector3 targetVelocity;
     Vector3 currentVelocity;
     Vector3 lastVelocity;
+
+    bool isActive = true;
+
     private void Awake()
     {
         cc = GetComponent<CharacterController>();
@@ -20,8 +23,8 @@ public class PlayerController : MonoBehaviour
 
     private void OnEnable()
     {
-
-        Cursor.lockState = CursorLockMode.Locked;
+        EventManager.OnContainerOpened.AddListener(DisableInteraction);
+        EventManager.OnContainerClosed.AddListener(EnableInteraction);
     }
 
     void Update()
@@ -41,7 +44,13 @@ public class PlayerController : MonoBehaviour
 
     #region Locomotion
     void PollInputs()
-    {  
+    {   
+        if(!isActive)
+        {   
+            inputDirection = Vector3.zero;
+            return;
+        }
+        
         inputDirection.x =  Input.GetAxisRaw("Horizontal");
         inputDirection.z =  Input.GetAxisRaw("Vertical");
     }
@@ -91,14 +100,30 @@ public class PlayerController : MonoBehaviour
     }
 
 
-    #region HELPERS
+    #region OTHERS
     Vector3 GetAccelaration()
     {
         Vector3 accDir = targetVelocity - currentVelocity;
         return accDir.normalized * playerData.Accelaration;
     }
+
+    void EnableInteraction()
+    {
+        isActive = true;
+    }
+
+    void DisableInteraction()
+    {
+        isActive = false;
+    }
+
     #endregion
 
+    void OnDisable()
+    {
+        EventManager.OnContainerOpened.RemoveListener(DisableInteraction);
+        EventManager.OnContainerClosed.RemoveListener(EnableInteraction);
+    }
 
     
 
