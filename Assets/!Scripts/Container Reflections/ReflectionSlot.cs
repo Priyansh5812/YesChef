@@ -24,6 +24,7 @@ public class ReflectionSlot : MonoBehaviour , IBeginDragHandler , IEndDragHandle
 
         if(system == null)
             system = this.GetComponentInParent<ContainerReflectionSystem>();
+
     }
 
     public void InitializeSlot(KitchenItem item, int index)
@@ -62,7 +63,7 @@ public class ReflectionSlot : MonoBehaviour , IBeginDragHandler , IEndDragHandle
 
     public void OnDrop(PointerEventData eventData)
     {
-        Debug.LogWarning("Dropped on "+eventData.pointerDrag.gameObject.name);
+        Debug.LogWarning("Dropped on "+ eventData.pointerDrag.gameObject.name);
         
         var req = ContainerReflectionSystem.ActiveTransferRequest;
 

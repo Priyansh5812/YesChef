@@ -70,22 +70,8 @@ public class SlotContainer : IContainer
 
     public void RemoveItem(int targetIndex)
     {   
-        Debug.Log("Before Remove:");
-
-        foreach(var i in containerData)
-        {
-            Debug.Log(i == null ? "NULL" : i.itemType);
-        }
-
         containerData[targetIndex] = null;
-
-        Debug.Log("After Remove:");
-
-        foreach(var i in containerData)
-        {
-            Debug.Log(i == null ? "NULL" : i.itemType);
-        }
-
+        
         if(m_data.CanRestockFromConfig)
             Restock(targetIndex);
     }
@@ -127,14 +113,49 @@ public class SlotContainer : IContainer
 
     public void PerformAction()
     {
+        switch(m_data.ContainerFunction)
+        {
+            case ContainerFunctionType.SLICE:
+                SliceAction();
+                break;
+            case ContainerFunctionType.COOK:
+                CookAction();
+                break;
+            case ContainerFunctionType.DISPOSE:
+                DisposeAction();
+                break;
+            case ContainerFunctionType.NONE:
+            default:
+                break;
+        }
         
     }
 
+    void DisposeAction()
+    {   
+        for(int i = 0 ; i < this.containerData.Length; i++)
+        {
+            RemoveItem(i);
+        }
+
+        EventManager.RefreshContainerReflections?.Invoke();
+    }
+
+    void CookAction()
+    {
+        
+    }
+
+    void SliceAction()
+    {
+        
+    }
+
+    #endregion
     public void GetConfigInfo(out string title, out ContainerFunctionType funcType)
     {
        title = m_data.ContainerName;
        funcType = m_data.ContainerFunction;
     }
 
-    #endregion
 }
