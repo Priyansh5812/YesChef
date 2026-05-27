@@ -100,13 +100,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 1663774408467455226}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0ee599cd018fcda419a3f86be872dbbb, type: 3}
+  m_Script: {fileID: 11500000, guid: bdf927db07ada8d4fb1891b8ede503ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TrashController
   isInteractionDirectionless: 1
   referenceInteractionDirection: {x: 0, y: 0, z: 1}
   interactionTrigger: {fileID: 9066547527230340083}
   minDirectionAlignment: 0.8
+  m_data: {fileID: 11400000, guid: 18c6c4912b718df41b2ffbf5d5190212, type: 2}
+  fallbackSize: 3
 --- !u!23 &378010670173811283
 MeshRenderer:
   m_ObjectHideFlags: 0

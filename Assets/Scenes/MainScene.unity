@@ -1283,6 +1283,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4635287436969407688, guid: b8cda3006939df444b4af01f3f46d9d8, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1357,6 +1361,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: ENVIRONMENT
       objectReference: {fileID: 0}
+    - target: {fileID: 271671990611547613, guid: ba3f3c0545bea1b4ba31c96dab5dcc75, type: 3}
+      propertyPath: fallbackSize
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4448850334104371775, guid: ba3f3c0545bea1b4ba31c96dab5dcc75, type: 3}
       propertyPath: m_Size.x
       value: 3.458072
@@ -1372,6 +1380,18 @@ PrefabInstance:
     - target: {fileID: 4448850334104371775, guid: ba3f3c0545bea1b4ba31c96dab5dcc75, type: 3}
       propertyPath: m_Center.z
       value: -0.67203325
+      objectReference: {fileID: 0}
+    - target: {fileID: 6142290736734307513, guid: ba3f3c0545bea1b4ba31c96dab5dcc75, type: 3}
+      propertyPath: fallbackSize
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6144470862619753854, guid: ba3f3c0545bea1b4ba31c96dab5dcc75, type: 3}
+      propertyPath: fallbackSize
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7011586529328117150, guid: ba3f3c0545bea1b4ba31c96dab5dcc75, type: 3}
+      propertyPath: fallbackSize
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8187785548004310144, guid: ba3f3c0545bea1b4ba31c96dab5dcc75, type: 3}
       propertyPath: m_LocalPosition.x

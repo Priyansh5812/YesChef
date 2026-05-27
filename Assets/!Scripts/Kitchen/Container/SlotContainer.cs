@@ -4,7 +4,6 @@ using UnityEngine;
 public class SlotContainer : IContainer
 {   
     protected ContainerConfig m_data;
-    readonly int fallbackInitializationSize = 2;
     protected KitchenItem[] containerData;
 
     public bool IsOpened
@@ -20,9 +19,9 @@ public class SlotContainer : IContainer
 
     void Initialize()
     {
-        if(m_data == null || m_data.InitItems.Count == 0)
+        if(m_data.InitItems.Count == 0)
         {
-            containerData = new KitchenItem[fallbackInitializationSize];
+            containerData = new KitchenItem[m_data.FallbackSlotCount];
             return;
         }
 
@@ -30,7 +29,7 @@ public class SlotContainer : IContainer
     }
 
     public void UpdateReflection(ContainerReflectionSystem reflection)
-    {
+    {   
         reflection.ReflectContainer(containerData , this);
     }
 
@@ -46,34 +45,31 @@ public class SlotContainer : IContainer
         IsOpened = false;
     }
 
-    public bool TryAddItem(KitchenItem item, int targetIndex)
+    public void AddItem(KitchenItem item, int targetIndex)
     {   
-        if(!m_data.ItemAdditionCompatible)
-            return false;
+        Debug.Log("Before Add:");
 
-        if(item == null)
-            return false;
-
-        if(targetIndex >= containerData.Length)
-            return false;
+        foreach(var i in containerData)
+        {
+            Debug.Log(i == null ? "NULL" : i.itemType);
+        }
 
         if(containerData[targetIndex] == null) // TODO : Will be different for other types of containers
         {
             this.containerData[targetIndex] = item;
-            return true;
-        }
 
-        return false;
+            Debug.Log("After Add:");
+
+            foreach(var i in containerData)
+            {
+                Debug.Log(i == null ? "NULL" : i.itemType);
+            }
+
+        }
     }
 
-    public bool RemoveItem(int targetIndex)
+    public void RemoveItem(int targetIndex)
     {   
-        if(!m_data.ItemRemovalCompatible)
-            return false;
-
-        if(targetIndex >= containerData.Length)
-            return false;
-
         Debug.Log("Before Remove:");
 
         foreach(var i in containerData)
@@ -92,12 +88,38 @@ public class SlotContainer : IContainer
 
         if(m_data.CanRestockFromConfig)
             Restock(targetIndex);
-
-        return true;
     }
+
+    
 
     void Restock(int restockIndex)
     {
         containerData[restockIndex] = new KitchenItem(m_data.InitItems[restockIndex]);
+    }
+
+    public bool EvaluateItemAddition(KitchenItem item, int targetIndex)
+    {   
+        if(!m_data.ItemAdditionCompatible)
+            return false;
+
+        if(item == null)
+            return false;
+
+        if(targetIndex >= containerData.Length)
+            return false;
+
+
+        return true;
+    }
+
+    public bool EvaluateItemRemoval(int targetIndex)
+    {   
+        if(!m_data.ItemRemovalCompatible)
+            return false;
+
+        if(targetIndex >= containerData.Length)
+            return false;
+
+        return true;
     }
 }

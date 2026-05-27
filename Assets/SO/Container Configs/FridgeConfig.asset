@@ -36,3 +36,4 @@ MonoBehaviour:
   <CanRestockFromConfig>k__BackingField: 1
   <ItemAdditionCompatible>k__BackingField: 0
   <ItemRemovalCompatible>k__BackingField: 1
+  <FallbackSlotCount>k__BackingField: 1

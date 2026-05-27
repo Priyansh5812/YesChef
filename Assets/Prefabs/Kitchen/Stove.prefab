@@ -98,13 +98,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 7931982440646461384}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d52a897f529132c418f35c6a219a1162, type: 3}
+  m_Script: {fileID: 11500000, guid: bdf927db07ada8d4fb1891b8ede503ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StoveController
   isInteractionDirectionless: 0
   referenceInteractionDirection: {x: 0, y: 0, z: -1}
   interactionTrigger: {fileID: 1079633193856722505}
   minDirectionAlignment: 0.8
+  m_data: {fileID: 11400000, guid: 6ba506d5a7b8392438c9e76d618d9fd4, type: 2}
+  fallbackSize: 1
 --- !u!23 &6325996527107514876
 MeshRenderer:
   m_ObjectHideFlags: 0

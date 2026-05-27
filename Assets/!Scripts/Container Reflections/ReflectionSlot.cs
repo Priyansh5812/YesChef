@@ -66,8 +66,9 @@ public class ReflectionSlot : MonoBehaviour , IBeginDragHandler , IEndDragHandle
         
         var req = ContainerReflectionSystem.ActiveTransferRequest;
 
-        if(this.system.associatedContainer.TryAddItem(req.Value.kitchenItem,this.item.originalArrayIndex))
+        if(this.system.associatedContainer.EvaluateItemAddition(req.Value.kitchenItem,this.item.originalArrayIndex) && req.Value.associatedContainer.EvaluateItemRemoval(req.Value.itemIndex))
         {
+            this.system.associatedContainer.AddItem(req.Value.kitchenItem,this.item.originalArrayIndex);
             req.Value.associatedContainer.RemoveItem(req.Value.itemIndex);
             EventManager.RefreshContainerReflections.Invoke();
         }

@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ContainerConfig
   <ContainerName>k__BackingField: Trash
   InitItems: []
-  <ContainerFunction>k__BackingField: 0
+  <ContainerFunction>k__BackingField: 3
   <CanRestockFromConfig>k__BackingField: 0
   <ItemAdditionCompatible>k__BackingField: 1
   <ItemRemovalCompatible>k__BackingField: 0
+  <FallbackSlotCount>k__BackingField: 3

@@ -45,13 +45,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 1912384416659713739}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 401e8b43d6257bd49bb06cef5c2ac43c, type: 3}
+  m_Script: {fileID: 11500000, guid: bdf927db07ada8d4fb1891b8ede503ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FridgeController
   isInteractionDirectionless: 0
   referenceInteractionDirection: {x: 0, y: 0, z: 1}
   interactionTrigger: {fileID: 4880845636194621610}
   minDirectionAlignment: 0.8
+  m_data: {fileID: 11400000, guid: 951abaa7b4fcefa42b42e0e6bee8e8e8, type: 2}
+  fallbackSize: 1
 --- !u!23 &8940757606295580939
 MeshRenderer:
   m_ObjectHideFlags: 0

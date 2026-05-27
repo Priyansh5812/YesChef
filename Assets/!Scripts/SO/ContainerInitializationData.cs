@@ -25,6 +25,10 @@ public class ContainerConfig : ScriptableObject
     {
         get; private set;   
     } = true;
+    [field : SerializeField , Range(1 , 5)] public int FallbackSlotCount
+    {
+        get; private set;   
+    }
 }
 
 public enum ContainerFunctionType

@@ -36,6 +36,7 @@ public class PlayerKitchenInteractor : MonoBehaviour
         if(collider.gameObject.TryGetComponent<KitchenInteractable>(out var comp))
         {   
             currentInteractable = comp;
+            currentInteractable.EnableInteraction();
         }
     }
 
@@ -43,6 +44,7 @@ public class PlayerKitchenInteractor : MonoBehaviour
     {
         if(collider.gameObject.TryGetComponent<KitchenInteractable>(out var comp))
         {   
+            currentInteractable?.DisableInteraction();
             currentInteractable = currentInteractable.GetEntityId() == comp.GetEntityId() ? null : currentInteractable;
         }
     }

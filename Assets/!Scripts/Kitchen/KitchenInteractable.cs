@@ -2,7 +2,7 @@ using UnityEngine;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
-public abstract class KitchenInteractable : MonoBehaviour
+public class KitchenInteractable : MonoBehaviour
 {   
     [SerializeField] protected bool isInteractionDirectionless = false;
     [SerializeField] protected Vector3 referenceInteractionDirection = Vector3.forward;
@@ -11,12 +11,28 @@ public abstract class KitchenInteractable : MonoBehaviour
     [SerializeField, Range(0f, 1f)]
     protected float minDirectionAlignment = 0.8f;
 
-    protected virtual void Awake()
+    [Header("Stats")]
+    [SerializeField] ContainerConfig m_data;
+    SlotContainer container;
+    ContainerReflectionSystem reflection;
+
+    void Awake()
     {
         interactionTrigger = this.GetComponent<BoxCollider>();
+        container ??= new(m_data);   
     }
 
-    protected Vector3 GetInteractionDirection() => this.transform.TransformDirection(this.referenceInteractionDirection);
+    void Start()
+    {
+        reflection = EventManager.GetKitchenContainerReflectionReference.Invoke();
+    }
+
+    Vector3 GetInteractionDirection() => this.transform.TransformDirection(this.referenceInteractionDirection);
+
+    public void EnableInteraction()
+    {
+        EventManager.RefreshContainerReflections.AddListener(RefreshContainerReflection);
+    }
 
     public void TryInitiateInteraction(Vector3 playerForward)
     {   
@@ -35,9 +51,28 @@ public abstract class KitchenInteractable : MonoBehaviour
             Debug.LogError("Interaction Vector not matched");
         }
     }
+    
 
-    protected abstract void InitiateInteraction();
+    void InitiateInteraction()
+    {   
+        if(!container.IsOpened)
+        {
+            EventManager.RefreshContainerReflections.Invoke();
+            container.OpenContainer();
+        }
+        else
+            container.CloseContainer();
+    }
 
+    void RefreshContainerReflection()
+    {   
+        this.container.UpdateReflection(reflection);
+    }
+
+    public void DisableInteraction()
+    {
+        EventManager.RefreshContainerReflections.RemoveListener(RefreshContainerReflection);
+    }
 
 
 #region UNITY_EDITOR
@@ -47,7 +82,7 @@ public abstract class KitchenInteractable : MonoBehaviour
         interactionTrigger = this.GetComponent<BoxCollider>();
     }
 
-    public virtual void OnDrawGizmos()
+    void OnDrawGizmos()
     {
         var color = Color.green;
         color.a = 0.5f;

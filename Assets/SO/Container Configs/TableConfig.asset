@@ -13,6 +13,9 @@ MonoBehaviour:
   m_Name: TableConfig
   m_EditorClassIdentifier: Assembly-CSharp::ContainerConfig
   <ContainerName>k__BackingField: Table
-  initItems: []
-  <containerFunction>k__BackingField: 1
-  <canRestockFromConfig>k__BackingField: 0
+  InitItems: []
+  <ContainerFunction>k__BackingField: 1
+  <CanRestockFromConfig>k__BackingField: 0
+  <ItemAdditionCompatible>k__BackingField: 1
+  <ItemRemovalCompatible>k__BackingField: 1
+  <FallbackSlotCount>k__BackingField: 1

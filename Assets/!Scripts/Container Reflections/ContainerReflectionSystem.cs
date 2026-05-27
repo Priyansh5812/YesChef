@@ -26,11 +26,12 @@ public class ContainerReflectionSystem : MonoBehaviour
 
         if(items.Length > slots.Length)
         {
-            Debug.LogError("Item count exceeds the cached slot length");
+            Debug.LogError($"Item count exceeds the cached slot length\n items: {items.Length}\n slots: {slots.Length}");
             return;
         }
 
         int size = items.Length;
+        
 
         for(int i = 0 ; i < size; i++)
         {
