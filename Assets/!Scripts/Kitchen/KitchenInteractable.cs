@@ -16,7 +16,6 @@ public abstract class KitchenInteractable : MonoBehaviour
         interactionTrigger = this.GetComponent<BoxCollider>();
     }
 
-
     protected Vector3 GetInteractionDirection() => this.transform.TransformDirection(this.referenceInteractionDirection);
 
     public void TryInitiateInteraction(Vector3 playerForward)
@@ -39,6 +38,10 @@ public abstract class KitchenInteractable : MonoBehaviour
 
     protected abstract void InitiateInteraction();
 
+
+
+#region UNITY_EDITOR
+
     void OnValidate()
     {
         interactionTrigger = this.GetComponent<BoxCollider>();
@@ -59,5 +62,5 @@ public abstract class KitchenInteractable : MonoBehaviour
         Handles.color = Color.red;
         Handles.ArrowHandleCap(1,this.transform.TransformPoint(interactionTrigger.center) + Vector3.up * (1.0f + interactionTrigger.size.y / 2)  , Quaternion.LookRotation(GetInteractionDirection().normalized),2f,EventType.Repaint);
     }
-
+#endregion
 }

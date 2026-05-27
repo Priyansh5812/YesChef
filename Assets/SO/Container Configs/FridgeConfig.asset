@@ -10,9 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 161409887c80f9249a3bb80676a53527, type: 3}
-  m_Name: FridgeInitializationData
+  m_Name: FridgeConfig
   m_EditorClassIdentifier: Assembly-CSharp::ContainerInitializationData
-  initItems:
+  <ContainerName>k__BackingField: Fridge
+  InitItems:
   - itemType: 0
     sprite: {fileID: 21300000, guid: 0a8adcf1a345fcd49a3275db1a176984, type: 3}
     isChoppable: 1
@@ -31,3 +32,7 @@ MonoBehaviour:
     isChopped: 0
     isCookable: 1
     isCooked: 0
+  <ContainerFunction>k__BackingField: 0
+  <CanRestockFromConfig>k__BackingField: 1
+  <ItemAdditionCompatible>k__BackingField: 0
+  <ItemRemovalCompatible>k__BackingField: 1

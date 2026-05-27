@@ -2,14 +2,25 @@ using UnityEngine;
 public class ContainerReflectionSystem : MonoBehaviour
 {   
     ReflectionSlot[] slots;
+    public IContainer associatedContainer
+    {
+        get; private set;
+    }
+
+    public static KitchenItemTransferRequest? ActiveTransferRequest
+    {
+        get; set;
+    } = null;
 
     void Awake()
     {
         slots = this.GetComponentsInChildren<ReflectionSlot>();
     }
 
-    public void ReflectContainer(KitchenItem[] items)
-    {
+    public void ReflectContainer(KitchenItem[] items , IContainer container)
+    {   
+        associatedContainer = container;
+
         foreach(var i in slots)
             i.gameObject.SetActive(false);
 
@@ -24,7 +35,7 @@ public class ContainerReflectionSystem : MonoBehaviour
         for(int i = 0 ; i < size; i++)
         {
             slots[i].gameObject.SetActive(true);
-            slots[i].Initialize(items[i] , i);
+            slots[i].InitializeSlot(items[i] , i);
         }
     }
 }

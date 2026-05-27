@@ -86,6 +86,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f8e7926b8b6ab441a03b27a31a778e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerKitchenInteractor
+  inventoryConfig: {fileID: 11400000, guid: 95dce419447142c46a429e7398bd035a, type: 2}
 --- !u!1 &1447325099413828773
 GameObject:
   m_ObjectHideFlags: 0

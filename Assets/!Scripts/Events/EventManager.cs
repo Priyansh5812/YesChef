@@ -11,11 +11,6 @@ public static class EventManager
     {
         get; private set;
     } = new();
-
-    public static ActionEvent OnPreContainerOpened
-    {
-        get; private set;
-    } = new();
     
     public static ActionEvent OnContainerOpened
     {
@@ -27,6 +22,10 @@ public static class EventManager
         get; private set;
     } = new();
     
+    public static ActionEvent RefreshContainerReflections
+    {
+        get; private set;
+    } = new();
 }
 
 public class ActionEvent

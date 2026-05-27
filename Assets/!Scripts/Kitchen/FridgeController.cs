@@ -2,8 +2,7 @@ using UnityEngine;
 public class FridgeController : KitchenInteractable 
 {   
     [Header("Stats")]
-    [SerializeField] ContainerInitializationData m_data;
-    [SerializeField , Min(1)] int fallbackSlotSize;
+    [SerializeField] ContainerConfig m_data;
     SlotContainer container;
     ContainerReflectionSystem reflection;
 
@@ -11,13 +10,17 @@ public class FridgeController : KitchenInteractable
     protected override void Awake()
     {   
         base.Awake();
-        container ??= new(m_data , fallbackSlotSize);   
+        container ??= new(m_data);   
+    }
+    
+    void OnEnable()
+    {
+        EventManager.RefreshContainerReflections.AddListener(RefreshContainerReflection);
     }
 
     void Start()
     {
         reflection = EventManager.GetKitchenContainerReflectionReference.Invoke();
-        container.Initialize();
     }
 
     protected override void InitiateInteraction()
@@ -25,10 +28,22 @@ public class FridgeController : KitchenInteractable
         Debug.Log("Fridge Interaction");
         
         if(!container.IsOpened)
-            container.OpenContainer(reflection);
+        {
+            EventManager.RefreshContainerReflections.Invoke();
+            container.OpenContainer();
+        }
         else
-            container.CloseContainer(reflection);
+            container.CloseContainer();
     }
 
-    
+
+    void RefreshContainerReflection()
+    {
+        this.container.UpdateReflection(reflection);
+    }
+
+    void OnDisable()
+    {
+        EventManager.RefreshContainerReflections.RemoveListener(RefreshContainerReflection);
+    }
 }

@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class PlayerKitchenInteractor : MonoBehaviour
 {   
+    [SerializeField] ContainerConfig inventoryConfig;
     KitchenInteractable currentInteractable = null;
     SlotContainer inventoryContainer;
     ContainerReflectionSystem inventoryReflection;
@@ -12,12 +13,12 @@ public class PlayerKitchenInteractor : MonoBehaviour
 
     void InitListeners()
     {
-        EventManager.OnPreContainerOpened.AddListener(RefreshInventoryReflection);
+        EventManager.RefreshContainerReflections.AddListener(RefreshInventoryReflection);
     }
 
     void Start()
     {
-        inventoryContainer = new SlotContainer(null,2);
+        inventoryContainer = new SlotContainer(inventoryConfig);
         inventoryReflection = EventManager.GetInventoryReflectionReference.Invoke();
     }
 
@@ -62,16 +63,13 @@ public class PlayerKitchenInteractor : MonoBehaviour
 
     void RefreshInventoryReflection()
     {
-        if(!inventoryContainer.IsOpened)
-            inventoryContainer.OpenContainer(inventoryReflection);
-        else
-            inventoryContainer.CloseContainer(inventoryReflection);
+        this.inventoryContainer.UpdateReflection(inventoryReflection);
     }
 
     #endregion
     void DeInitListeners()
     {
-        EventManager.OnPreContainerOpened.RemoveListener(RefreshInventoryReflection);
+        EventManager.RefreshContainerReflections.RemoveListener(RefreshInventoryReflection);
     }
 
     void OnDisable()

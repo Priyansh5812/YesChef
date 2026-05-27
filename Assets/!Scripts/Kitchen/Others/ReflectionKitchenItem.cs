@@ -6,6 +6,7 @@ public struct ReflectionKitchenItem
         originalArrayIndex = ind;
     }
     public KitchenItem item;
+
     public int originalArrayIndex;
 
 }
