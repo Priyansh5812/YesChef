@@ -86,7 +86,7 @@ public class PlayerController : MonoBehaviour
         if(inputDirection.sqrMagnitude <= 0.01f)
             return;
 
-        Vector3 forwardDirection = inputDirection;
+        Vector3 forwardDirection = cam.transform.TransformDirection(inputDirection);
         forwardDirection = Vector3.ProjectOnPlane(forwardDirection, Vector3.up);
         Quaternion targetRotation = Quaternion.LookRotation(forwardDirection);
         bodyTransform.localRotation = Quaternion.RotateTowards(bodyTransform.localRotation,targetRotation , playerData.bodyRotationSpeed);

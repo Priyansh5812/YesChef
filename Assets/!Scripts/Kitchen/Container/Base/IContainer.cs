@@ -2,7 +2,6 @@ using UnityEngine;
 using System;
 public interface IContainer
 {   
-
     public void UpdateReflection(ContainerReflectionSystem reflection);
     public void OpenContainer();
     public void CloseContainer();
@@ -10,9 +9,11 @@ public interface IContainer
     public void RemoveItem(int targetIndex);
     public bool EvaluateItemAddition(KitchenItem item , int targetIndex);
     public bool EvaluateItemRemoval(int targetIndex);
-
+    public void PerformAction();
+    public void GetConfigInfo(out string title , out ContainerFunctionType funcType);
     public bool IsOpened
     {
         get; 
     }
+
 }

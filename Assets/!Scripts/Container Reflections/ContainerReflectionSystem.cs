@@ -1,6 +1,12 @@
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 public class ContainerReflectionSystem : MonoBehaviour
 {   
+    [SerializeField] TextMeshProUGUI title;
+    [SerializeField] TextMeshProUGUI actionTitle;
+    [SerializeField] Button actionBtn;
+     
     ReflectionSlot[] slots;
     public IContainer associatedContainer
     {
@@ -15,6 +21,11 @@ public class ContainerReflectionSystem : MonoBehaviour
     void Awake()
     {
         slots = this.GetComponentsInChildren<ReflectionSlot>();
+    }
+
+    void OnEnable()
+    {
+        actionBtn?.onClick.AddListener(PerformContainerAction);
     }
 
     public void ReflectContainer(KitchenItem[] items , IContainer container)
@@ -38,5 +49,39 @@ public class ContainerReflectionSystem : MonoBehaviour
             slots[i].gameObject.SetActive(true);
             slots[i].InitializeSlot(items[i] , i);
         }
+
+        associatedContainer.GetConfigInfo(out string title , out var funcType);
+        SetupTitle(title);
+        SetupFunctionAuthority(funcType);
+    }
+
+    void SetupTitle(string title)
+    {
+        this.title?.SetText(title);
+    }
+
+    void SetupFunctionAuthority(ContainerFunctionType functionType)
+    {   
+        if(this.actionBtn == null)
+            return;
+
+        if(functionType == ContainerFunctionType.NONE)
+        {
+            this.actionBtn.transform.parent.gameObject.SetActive(false);
+            return;
+        }
+        this.actionBtn.transform.parent.gameObject.SetActive(true);
+        this.actionTitle?.SetText(functionType.ToString());
+    }
+
+
+    void PerformContainerAction()
+    {
+        associatedContainer?.PerformAction();
+    }
+
+    void OnDisable()
+    {
+        actionBtn?.onClick.RemoveListener(PerformContainerAction);
     }
 }

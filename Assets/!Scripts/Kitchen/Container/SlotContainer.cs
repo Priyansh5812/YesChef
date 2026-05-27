@@ -122,4 +122,19 @@ public class SlotContainer : IContainer
 
         return true;
     }
+
+    #region Container Actions
+
+    public void PerformAction()
+    {
+        
+    }
+
+    public void GetConfigInfo(out string title, out ContainerFunctionType funcType)
+    {
+       title = m_data.ContainerName;
+       funcType = m_data.ContainerFunction;
+    }
+
+    #endregion
 }
