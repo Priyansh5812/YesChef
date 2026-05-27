@@ -42,10 +42,10 @@ public class ReflectionSlot : MonoBehaviour , IBeginDragHandler , IEndDragHandle
 
     #region DRAG - DROP
     public void OnBeginDrag(PointerEventData eventData)
-    {
+    {   
         this.image.rectTransform.anchoredPosition += eventData.delta / m_canvas.scaleFactor;
         m_canvas.sortingOrder++;
-
+        ContainerReflectionSystem.IsUnderDragOperation = true;
         ContainerReflectionSystem.ActiveTransferRequest = PrepareItemTransferRequest(); 
     }
 
@@ -58,6 +58,7 @@ public class ReflectionSlot : MonoBehaviour , IBeginDragHandler , IEndDragHandle
     {   
         this.image.rectTransform.anchoredPosition = Vector2.zero;
         m_canvas.sortingOrder--;
+        ContainerReflectionSystem.IsUnderDragOperation = false;
         ContainerReflectionSystem.ActiveTransferRequest = null;
     }
 
@@ -66,6 +67,9 @@ public class ReflectionSlot : MonoBehaviour , IBeginDragHandler , IEndDragHandle
         Debug.LogWarning("Dropped on "+ eventData.pointerDrag.gameObject.name);
         
         var req = ContainerReflectionSystem.ActiveTransferRequest;
+
+        if(this.system.associatedContainer == req.Value.associatedContainer)
+            return;
 
         if(this.system.associatedContainer.EvaluateItemAddition(req.Value.kitchenItem,this.item.originalArrayIndex) && req.Value.associatedContainer.EvaluateItemRemoval(req.Value.itemIndex))
         {

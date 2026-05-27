@@ -6,8 +6,9 @@ public class SlotContainer : IContainer
     ContainerConfig m_data;
     KitchenItem[] containerData;
     KitchenInteractable associatedInteractable;
-
     bool isContainerLocked = false;
+    float functionProgression = 0;
+    float functionCompletionTime = -1;
 
     public bool IsOpened
     {
@@ -49,7 +50,13 @@ public class SlotContainer : IContainer
     }
     
     public void CloseContainer()
-    {
+    {   
+        if(isContainerLocked && !m_data.IsFunctionPassive)
+            return;
+
+        if(ContainerReflectionSystem.IsUnderDragOperation)
+            return;
+
         EventManager.OnContainerClosed.Invoke();
         IsOpened = false;
     }
@@ -162,28 +169,52 @@ public class SlotContainer : IContainer
         EventManager.RefreshContainerReflections?.Invoke();
     }
 
-    void SetupTimedOperation()
-    {   
-        bool isInteractableEmpty = true;
+    bool IsContainerEmpty()
+    {
+        bool isContainerEmpty = true;
         foreach(var i in containerData)
         {
             if(i != null)
             {
-                isInteractableEmpty = false;
+                isContainerEmpty = false;
                 break;
             }
         }
 
-        if(isInteractableEmpty)
+        return isContainerEmpty;
+    }
+
+    bool IsContainerFunctionEligible()
+    {   
+        return true;
+    }
+
+    void SetupTimedOperation()
+    {   
+
+        if(IsContainerEmpty())
         {
             Debug.LogWarning("Halted beforehand");
             return;
         }
 
+        if(!IsContainerFunctionEligible())
+        {
+            return;
+        } 
+
         isContainerLocked = true;
-        associatedInteractable?.InitiateSlotFunctionTimer(5 , OnTimedOperationCompletion);
+        functionProgression = 0f; 
+        functionCompletionTime = Time.time + m_data.FunctionCompletionDuration;
+        associatedInteractable?.InitiateSlotFunctionTimer(m_data.FunctionCompletionDuration, OnTimedOperationUpdation , OnTimedOperationCompletion);
     }
 
+    
+
+    void OnTimedOperationUpdation(float progress)
+    {
+        this.functionProgression = progress;
+    }
 
     void OnTimedOperationCompletion()
     {   
@@ -215,6 +246,8 @@ public class SlotContainer : IContainer
         if(IsOpened)
             EventManager.RefreshContainerReflections?.Invoke();
         isContainerLocked = false;
+        functionProgression = 0f; 
+        functionCompletionTime = -1;
     }
 
 
@@ -225,4 +258,9 @@ public class SlotContainer : IContainer
        funcType = m_data.ContainerFunction;
     }
 
+    public void GetFunctionCompletionStat(out float progression , out float completionTime)
+    {
+        progression = this.functionProgression;
+        completionTime = this.functionCompletionTime;
+    }
 }

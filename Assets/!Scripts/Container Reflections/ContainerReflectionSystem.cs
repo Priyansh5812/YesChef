@@ -1,12 +1,17 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.Collections;
 public class ContainerReflectionSystem : MonoBehaviour
 {   
     [SerializeField] TextMeshProUGUI title;
     [SerializeField] TextMeshProUGUI actionTitle;
     [SerializeField] Button actionBtn;
-     
+    [SerializeField] TextMeshProUGUI timeRemaining;
+    [SerializeField] Slider loadingSlider;
+    [SerializeField] bool canTickProgression;
+    Coroutine ProgressionTickRoutine = null;
+
     ReflectionSlot[] slots;
     public IContainer associatedContainer
     {
@@ -18,6 +23,11 @@ public class ContainerReflectionSystem : MonoBehaviour
         get; set;
     } = null;
 
+    public static bool IsUnderDragOperation
+    {
+        get;  set;
+    } = false;
+
     void Awake()
     {
         slots = this.GetComponentsInChildren<ReflectionSlot>();
@@ -26,7 +36,11 @@ public class ContainerReflectionSystem : MonoBehaviour
     void OnEnable()
     {
         actionBtn?.onClick.AddListener(PerformContainerAction);
+
+        if(canTickProgression)
+            ProgressionTickRoutine = StartCoroutine(ReflectContainerAssociatedActiveFunctions());
     }
+    
 
     public void ReflectContainer(KitchenItem[] items , IContainer container)
     {   
@@ -53,6 +67,8 @@ public class ContainerReflectionSystem : MonoBehaviour
         associatedContainer.GetConfigInfo(out string title , out var funcType);
         SetupTitle(title);
         SetupFunctionAuthority(funcType);
+
+
     }
 
     void SetupTitle(string title)
@@ -75,6 +91,66 @@ public class ContainerReflectionSystem : MonoBehaviour
     }
 
 
+
+    #region Container associated active function reflection
+
+    bool isVisible = true;
+
+    IEnumerator ReflectContainerAssociatedActiveFunctions()
+    {
+        while(canTickProgression)
+        {
+            
+            if(loadingSlider == null || timeRemaining == null || associatedContainer == null)
+            {   
+                HideProgressionPanel();
+                yield return null;
+                continue;
+            }
+
+            associatedContainer.GetFunctionCompletionStat(out float progress , out float completionTime);
+
+            if(completionTime == -1)
+            {   
+                HideProgressionPanel();
+                yield return null;
+                continue;
+            }
+
+            DisplayProgressionPanel();
+
+            timeRemaining?.SetText((completionTime - Time.time).ToString("N0")+"s");
+            loadingSlider.value = progress;
+
+            yield return null;
+        }
+
+        ProgressionTickRoutine = null;
+    }
+
+    void HideProgressionPanel()
+    {   
+        if(!isVisible)
+            return;
+
+        timeRemaining?.SetText("");
+        loadingSlider.gameObject.SetActive(false);
+        isVisible = false;
+    }
+
+    void DisplayProgressionPanel()
+    {   
+        if(isVisible)
+            return;
+
+        loadingSlider.gameObject.SetActive(true);
+        isVisible = true;
+    }
+
+    
+    #endregion
+
+
     void PerformContainerAction()
     {
         associatedContainer?.PerformAction();
@@ -83,5 +159,9 @@ public class ContainerReflectionSystem : MonoBehaviour
     void OnDisable()
     {
         actionBtn?.onClick.RemoveListener(PerformContainerAction);
+        if(ProgressionTickRoutine != null)
+        {
+            StopCoroutine(ProgressionTickRoutine);
+        }
     }
 }

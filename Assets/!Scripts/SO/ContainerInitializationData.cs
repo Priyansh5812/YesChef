@@ -13,6 +13,16 @@ public class ContainerConfig : ScriptableObject
     {
         get; private set;   
     }
+
+    [field : SerializeField , Range(1f , 10f)] public float FunctionCompletionDuration
+    {
+        get; private set;   
+    } = 2f;
+
+    [field : SerializeField] public bool IsFunctionPassive
+    {
+        get; private set;   
+    }
     [field : SerializeField] public bool CanRestockFromConfig
     {
         get; private set;   

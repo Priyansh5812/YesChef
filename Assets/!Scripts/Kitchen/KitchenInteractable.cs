@@ -60,7 +60,7 @@ public class KitchenInteractable : MonoBehaviour
     void InitiateInteraction()
     {   
         if(!container.IsOpened)
-        {
+        {   
             EventManager.RefreshContainerReflections.Invoke();
             container.OpenContainer();
         }
@@ -78,19 +78,22 @@ public class KitchenInteractable : MonoBehaviour
         EventManager.RefreshContainerReflections.RemoveListener(RefreshContainerReflection);
     }
 
-    public void InitiateSlotFunctionTimer(float duration , Action OnTimerCompletion = null)
+    public void InitiateSlotFunctionTimer(float duration , Action<float> OnProgressUpdation = null , Action OnTimerCompletion = null)
     {
-        slotFunctionRoutineReference = StartCoroutine(SlotFunctionTimerRoutine(duration , OnTimerCompletion));
+        slotFunctionRoutineReference = StartCoroutine(SlotFunctionTimerRoutine(duration, OnProgressUpdation , OnTimerCompletion));
     }
 
-    IEnumerator SlotFunctionTimerRoutine(float duration , Action OnTimerCompletion = null)
+    IEnumerator SlotFunctionTimerRoutine(float duration ,Action<float> OnProgressUpdation = null, Action OnTimerCompletion = null)
     {   
         // Avoiding WaitForSeconds due to hidden allocations
         float t = duration;
-
+        float norm; 
         while(t > 0)
         {
             t -= Time.deltaTime;
+            norm = 1 - (t / duration);
+            norm = Mathf.Clamp01(norm);
+            OnProgressUpdation?.Invoke(norm);
             yield return null;
         }
 

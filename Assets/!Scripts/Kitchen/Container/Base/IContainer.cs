@@ -11,6 +11,7 @@ public interface IContainer
     public bool EvaluateItemRemoval(int targetIndex);
     public void PerformAction();
     public void GetConfigInfo(out string title , out ContainerFunctionType funcType);
+    public void GetFunctionCompletionStat(out float progression , out float completionTime);
     public bool IsOpened
     {
         get; 

@@ -20,3 +20,5 @@ MonoBehaviour:
   <ItemRemovalCompatible>k__BackingField: 1
   <FallbackSlotCount>k__BackingField: 1
   <IgnoreItemAdditionTypes>k__BackingField: 
+  <ModifiedItemSprites>k__BackingField:
+    _serializedList: []

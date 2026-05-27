@@ -16,24 +16,21 @@ MonoBehaviour:
   InitItems:
   - itemType: 0
     sprite: {fileID: 21300000, guid: 0a8adcf1a345fcd49a3275db1a176984, type: 3}
-    isChoppable: 1
     isChopped: 0
-    isCookable: 0
     isCooked: 0
   - itemType: 1
     sprite: {fileID: 21300000, guid: dceab24dd7b3a91449766a625078df02, type: 3}
-    isChoppable: 0
     isChopped: 0
-    isCookable: 0
     isCooked: 0
   - itemType: 2
     sprite: {fileID: 21300000, guid: 6edd46dd48170ef4a87672368de8a620, type: 3}
-    isChoppable: 0
     isChopped: 0
-    isCookable: 1
     isCooked: 0
   <ContainerFunction>k__BackingField: 0
   <CanRestockFromConfig>k__BackingField: 1
   <ItemAdditionCompatible>k__BackingField: 0
   <ItemRemovalCompatible>k__BackingField: 1
   <FallbackSlotCount>k__BackingField: 1
+  <IgnoreItemAdditionTypes>k__BackingField: 
+  <ModifiedItemSprites>k__BackingField:
+    _serializedList: []
