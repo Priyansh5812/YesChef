@@ -2189,10 +2189,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: ItemHolder
       objectReference: {fileID: 0}
-    - target: {fileID: 1242883608420362073, guid: 6fe47ba4ac1a08e4fbfa898edb1548cc, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 2487073161711359009, guid: 6fe47ba4ac1a08e4fbfa898edb1548cc, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -2804,8 +2800,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 366.24347, y: -297.48398}
-  m_SizeDelta: {x: 732.48694, y: 0}
+  m_AnchoredPosition: {x: 366.28406, y: -297.45584}
+  m_SizeDelta: {x: 732.5681, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &8460483266056495559
 MonoBehaviour:

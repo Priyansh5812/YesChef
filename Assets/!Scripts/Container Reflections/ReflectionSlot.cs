@@ -45,6 +45,7 @@ public class ReflectionSlot : MonoBehaviour , IBeginDragHandler , IEndDragHandle
     {   
         this.image.rectTransform.anchoredPosition += eventData.delta / m_canvas.scaleFactor;
         m_canvas.sortingOrder++;
+        this.image.rectTransform.SetParent(this.transform.parent);
         ContainerReflectionSystem.IsUnderDragOperation = true;
         ContainerReflectionSystem.ActiveTransferRequest = PrepareItemTransferRequest(); 
     }
@@ -56,6 +57,7 @@ public class ReflectionSlot : MonoBehaviour , IBeginDragHandler , IEndDragHandle
 
     public void OnEndDrag(PointerEventData eventData)
     {   
+        this.image.rectTransform.SetParent(this.transform);
         this.image.rectTransform.anchoredPosition = Vector2.zero;
         m_canvas.sortingOrder--;
         ContainerReflectionSystem.IsUnderDragOperation = false;
