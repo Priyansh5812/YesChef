@@ -2466,38 +2466,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: ENVIRONMENT
       objectReference: {fileID: 0}
-    - target: {fileID: 271671990611547613, guid: ba3f3c0545bea1b4ba31c96dab5dcc75, type: 3}
-      propertyPath: fallbackSize
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4448850334104371775, guid: ba3f3c0545bea1b4ba31c96dab5dcc75, type: 3}
-      propertyPath: m_Size.x
-      value: 3.458072
-      objectReference: {fileID: 0}
-    - target: {fileID: 4448850334104371775, guid: ba3f3c0545bea1b4ba31c96dab5dcc75, type: 3}
-      propertyPath: m_Size.z
-      value: 3.5618575
-      objectReference: {fileID: 0}
-    - target: {fileID: 4448850334104371775, guid: ba3f3c0545bea1b4ba31c96dab5dcc75, type: 3}
-      propertyPath: m_Center.x
-      value: 0.47857845
-      objectReference: {fileID: 0}
-    - target: {fileID: 4448850334104371775, guid: ba3f3c0545bea1b4ba31c96dab5dcc75, type: 3}
-      propertyPath: m_Center.z
-      value: -0.67203325
-      objectReference: {fileID: 0}
-    - target: {fileID: 6142290736734307513, guid: ba3f3c0545bea1b4ba31c96dab5dcc75, type: 3}
-      propertyPath: fallbackSize
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6144470862619753854, guid: ba3f3c0545bea1b4ba31c96dab5dcc75, type: 3}
-      propertyPath: fallbackSize
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7011586529328117150, guid: ba3f3c0545bea1b4ba31c96dab5dcc75, type: 3}
-      propertyPath: fallbackSize
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 8187785548004310144, guid: ba3f3c0545bea1b4ba31c96dab5dcc75, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -2800,8 +2768,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 366.28406, y: -297.45584}
-  m_SizeDelta: {x: 732.5681, y: 0}
+  m_AnchoredPosition: {x: 366.29962, y: -297.44507}
+  m_SizeDelta: {x: 732.59924, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &8460483266056495559
 MonoBehaviour:
