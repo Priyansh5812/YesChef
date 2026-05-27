@@ -1,4 +1,6 @@
 using UnityEngine;
+using System;
+using System.Collections;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -16,10 +18,12 @@ public class KitchenInteractable : MonoBehaviour
     SlotContainer container;
     ContainerReflectionSystem reflection;
 
+    Coroutine slotFunctionRoutineReference;
+
     void Awake()
     {
         interactionTrigger = this.GetComponent<BoxCollider>();
-        container ??= new(m_data);   
+        container ??= new(m_data, this);   
     }
 
     void Start()
@@ -72,6 +76,25 @@ public class KitchenInteractable : MonoBehaviour
     public void DisableInteraction()
     {
         EventManager.RefreshContainerReflections.RemoveListener(RefreshContainerReflection);
+    }
+
+    public void InitiateSlotFunctionTimer(float duration , Action OnTimerCompletion = null)
+    {
+        slotFunctionRoutineReference = StartCoroutine(SlotFunctionTimerRoutine(duration , OnTimerCompletion));
+    }
+
+    IEnumerator SlotFunctionTimerRoutine(float duration , Action OnTimerCompletion = null)
+    {   
+        // Avoiding WaitForSeconds due to hidden allocations
+        float t = duration;
+
+        while(t > 0)
+        {
+            t -= Time.deltaTime;
+            yield return null;
+        }
+
+        OnTimerCompletion?.Invoke();
     }
 
 

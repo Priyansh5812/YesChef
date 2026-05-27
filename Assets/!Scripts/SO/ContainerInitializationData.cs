@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using AYellowpaper.SerializedCollections;
 [CreateAssetMenu(fileName = "ContainerConfig", menuName = "Scriptable Objects/ContainerConfig")]
 public class ContainerConfig : ScriptableObject
 {   
@@ -29,6 +30,18 @@ public class ContainerConfig : ScriptableObject
     {
         get; private set;   
     }
+
+    [field : SerializeField] public KitchenItemType[] IgnoreItemAdditionTypes
+    {
+        get; private set;
+    }
+
+    [field : SerializeField , SerializedDictionary("KitchenItemType","Sprite")] public SerializedDictionary<KitchenItemType , Sprite> ModifiedItemSprites
+    {
+        get; private set;
+    }
+    
+
 }
 
 public enum ContainerFunctionType
@@ -38,3 +51,4 @@ public enum ContainerFunctionType
     COOK,
     DISPOSE
 }
+

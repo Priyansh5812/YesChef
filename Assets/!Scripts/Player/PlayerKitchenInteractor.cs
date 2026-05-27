@@ -18,7 +18,7 @@ public class PlayerKitchenInteractor : MonoBehaviour
 
     void Start()
     {
-        inventoryContainer = new SlotContainer(inventoryConfig);
+        inventoryContainer = new SlotContainer(inventoryConfig , null);
         inventoryReflection = EventManager.GetInventoryReflectionReference.Invoke();
     }
 

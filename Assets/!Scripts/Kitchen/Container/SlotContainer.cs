@@ -3,29 +3,38 @@ using UnityEngine;
 
 public class SlotContainer : IContainer
 {   
-    protected ContainerConfig m_data;
-    protected KitchenItem[] containerData;
+    ContainerConfig m_data;
+    KitchenItem[] containerData;
+    KitchenInteractable associatedInteractable;
+
+    bool isContainerLocked = false;
 
     public bool IsOpened
     {
         get; private set;
     } = false;
 
-    public SlotContainer(ContainerConfig data)
+    public SlotContainer(ContainerConfig data , KitchenInteractable interactable)
     {
         m_data = data;
+        this.associatedInteractable = interactable;
         Initialize();
     }
 
     void Initialize()
-    {
+    {   
         if(m_data.InitItems.Count == 0)
         {
             containerData = new KitchenItem[m_data.FallbackSlotCount];
             return;
         }
 
-        containerData = m_data.InitItems.ToArray();
+
+       containerData = new KitchenItem[m_data.InitItems.Count];
+       for(int i = 0 ; i < containerData.Length; i++)
+        {
+            this.Restock(i);
+        }
     }
 
     public void UpdateReflection(ContainerReflectionSystem reflection)
@@ -85,6 +94,9 @@ public class SlotContainer : IContainer
 
     public bool EvaluateItemAddition(KitchenItem item, int targetIndex)
     {   
+        if(isContainerLocked)
+            return false;
+
         if(!m_data.ItemAdditionCompatible)
             return false;
 
@@ -94,12 +106,20 @@ public class SlotContainer : IContainer
         if(targetIndex >= containerData.Length)
             return false;
 
+        foreach(var i in m_data.IgnoreItemAdditionTypes)
+        {
+            if(i == item.itemType)
+                return false;
+        }
 
         return true;
     }
 
     public bool EvaluateItemRemoval(int targetIndex)
     {   
+        if(isContainerLocked)
+            return false;
+
         if(!m_data.ItemRemovalCompatible)
             return false;
 
@@ -112,14 +132,15 @@ public class SlotContainer : IContainer
     #region Container Actions
 
     public void PerformAction()
-    {
+    {   
+        if(isContainerLocked)
+            return;
+
         switch(m_data.ContainerFunction)
         {
             case ContainerFunctionType.SLICE:
-                SliceAction();
-                break;
             case ContainerFunctionType.COOK:
-                CookAction();
+                SetupTimedOperation();
                 break;
             case ContainerFunctionType.DISPOSE:
                 DisposeAction();
@@ -141,15 +162,61 @@ public class SlotContainer : IContainer
         EventManager.RefreshContainerReflections?.Invoke();
     }
 
-    void CookAction()
-    {
-        
+    void SetupTimedOperation()
+    {   
+        bool isInteractableEmpty = true;
+        foreach(var i in containerData)
+        {
+            if(i != null)
+            {
+                isInteractableEmpty = false;
+                break;
+            }
+        }
+
+        if(isInteractableEmpty)
+        {
+            Debug.LogWarning("Halted beforehand");
+            return;
+        }
+
+        isContainerLocked = true;
+        associatedInteractable?.InitiateSlotFunctionTimer(5 , OnTimedOperationCompletion);
     }
 
-    void SliceAction()
-    {
-        
+
+    void OnTimedOperationCompletion()
+    {   
+        for(int i = 0 ; i < this.containerData.Length; i++)
+        {   
+            if(this.containerData[i] == null)
+                continue;
+
+            if(m_data.ModifiedItemSprites.ContainsKey(this.containerData[i].itemType))
+            {
+                this.containerData[i].sprite = m_data.ModifiedItemSprites[this.containerData[i].itemType];
+                switch(m_data.ContainerFunction)
+                {
+                    case ContainerFunctionType.SLICE:
+                        this.containerData[i].isChopped = true;
+                        break;
+                    case ContainerFunctionType.COOK:
+                        this.containerData[i].isCooked = true;
+                        break;
+                    case ContainerFunctionType.DISPOSE:
+                    case ContainerFunctionType.NONE:
+                    default:
+                        break;
+                }
+                
+            }
+        }
+
+        if(IsOpened)
+            EventManager.RefreshContainerReflections?.Invoke();
+        isContainerLocked = false;
     }
+
 
     #endregion
     public void GetConfigInfo(out string title, out ContainerFunctionType funcType)
