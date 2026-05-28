@@ -15,4 +15,15 @@ public class KitchenItem
         this.isChopped = otherItem.isChopped;
         this.isCooked = otherItem.isCooked;
     }
+
+    public bool IsEqual(KitchenItem other)
+    {
+        return (
+            this.itemType == other.itemType
+            &&
+            this.isChopped == other.isChopped
+            &&
+            this.isCooked == other.isCooked
+        );
+    }
 }

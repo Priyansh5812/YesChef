@@ -4,6 +4,8 @@ using System.Collections;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
+
+[RequireComponent(typeof(BoxCollider))]
 public class KitchenInteractable : MonoBehaviour
 {   
     [SerializeField] protected bool isInteractionDirectionless = false;
@@ -14,19 +16,18 @@ public class KitchenInteractable : MonoBehaviour
     protected float minDirectionAlignment = 0.8f;
 
     [Header("Stats")]
-    [SerializeField] ContainerConfig m_data;
-    SlotContainer container;
-    ContainerReflectionSystem reflection;
-
+    [SerializeField] protected ContainerConfig m_data;
+    protected SlotContainer container;
+    protected ContainerReflectionSystem reflection;
     Coroutine slotFunctionRoutineReference;
 
-    void Awake()
+    protected virtual void Awake()
     {
         interactionTrigger = this.GetComponent<BoxCollider>();
         container ??= new(m_data, this);   
     }
 
-    void Start()
+    protected virtual void Start()
     {
         reflection = EventManager.GetKitchenContainerReflectionReference.Invoke();
     }
@@ -99,7 +100,6 @@ public class KitchenInteractable : MonoBehaviour
 
         OnTimerCompletion?.Invoke();
     }
-
 
 #region UNITY_EDITOR
 

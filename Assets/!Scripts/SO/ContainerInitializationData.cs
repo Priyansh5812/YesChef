@@ -59,6 +59,7 @@ public enum ContainerFunctionType
     NONE,
     SLICE,
     COOK,
-    DISPOSE
+    DISPOSE,
+    SERVE
 }
 

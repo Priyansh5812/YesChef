@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 
+// TODO : Separate the concerns of the Container Modification and Container Type Actions
 public class SlotContainer : IContainer
 {   
     ContainerConfig m_data;
@@ -61,6 +62,8 @@ public class SlotContainer : IContainer
         IsOpened = false;
     }
 
+    #region Container Modification Related
+
     public void AddItem(KitchenItem item, int targetIndex)
     {   
         Debug.Log("Before Add:");
@@ -91,8 +94,6 @@ public class SlotContainer : IContainer
         if(m_data.CanRestockFromConfig)
             Restock(targetIndex);
     }
-
-    
 
     void Restock(int restockIndex)
     {
@@ -135,6 +136,7 @@ public class SlotContainer : IContainer
 
         return true;
     }
+    #endregion
 
     #region Container Actions
 
@@ -207,9 +209,7 @@ public class SlotContainer : IContainer
         functionProgression = 0f; 
         functionCompletionTime = Time.time + m_data.FunctionCompletionDuration;
         associatedInteractable?.InitiateSlotFunctionTimer(m_data.FunctionCompletionDuration, OnTimedOperationUpdation , OnTimedOperationCompletion);
-    }
-
-    
+    }   
 
     void OnTimedOperationUpdation(float progress)
     {
@@ -250,7 +250,6 @@ public class SlotContainer : IContainer
         functionCompletionTime = -1;
     }
 
-
     #endregion
     public void GetConfigInfo(out string title, out ContainerFunctionType funcType)
     {
@@ -262,5 +261,18 @@ public class SlotContainer : IContainer
     {
         progression = this.functionProgression;
         completionTime = this.functionCompletionTime;
+    }
+
+    public Order GetCounterOrder()
+    {
+        if(this.associatedInteractable is CounterInteractable)
+        {
+            return ((CounterInteractable) this.associatedInteractable).GetOrder();
+        }
+        else
+        {   
+            Debug.LogError("An order request was intended from a Non-CounterInteractable reference. Returned NULL");
+            return null;
+        }
     }
 }

@@ -12,6 +12,7 @@ public interface IContainer
     public void PerformAction();
     public void GetConfigInfo(out string title , out ContainerFunctionType funcType);
     public void GetFunctionCompletionStat(out float progression , out float completionTime);
+    public Order GetCounterOrder();
     public bool IsOpened
     {
         get; 
