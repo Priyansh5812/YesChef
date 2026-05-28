@@ -23,6 +23,9 @@ public class ContainerConfig : ScriptableObject
     {
         get; private set;   
     }
+
+    [field: Space(10)]
+
     [field : SerializeField] public bool CanRestockFromConfig
     {
         get; private set;   
@@ -36,6 +39,12 @@ public class ContainerConfig : ScriptableObject
     {
         get; private set;   
     } = true;
+
+    [field : SerializeField] public bool CheckItemForOrderEligibility
+    {
+        get; private set;
+    }
+    
     [field : SerializeField , Range(1 , 5)] public int FallbackSlotCount
     {
         get; private set;   

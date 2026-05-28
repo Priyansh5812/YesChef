@@ -1,7 +1,6 @@
 using System;
 using UnityEngine;
 
-// TODO : Separate the concerns of the Container Modification and Container Type Actions
 public class SlotContainer : IContainer
 {   
     ContainerConfig m_data;
@@ -26,8 +25,6 @@ public class SlotContainer : IContainer
         this.associatedInteractable = interactable;
     }
 
-
-
     public void UpdateReflection(ContainerReflectionSystem reflection)
     {   
         reflection.ReflectContainer(dataManager.ContainerData , this);
@@ -51,7 +48,24 @@ public class SlotContainer : IContainer
         IsOpened = false;
     }
 
+    public bool ProcessContainerRequest(IContainerRequest req)
+    {   
+        switch(req)
+        {
+            case ContainerAddItem obj:
+                return dataManager.AddItem(obj.item , obj.targetIndex);
+            case ContainerRemoveItem obj:
+                return dataManager.RemoveItem(obj.targetIndex);
+            case ContainerEvaluateItemAddition obj:
+                return dataManager.EvaluateItemAddition(obj.item , obj.targetIndex);
+            case ContainerEvaluateItemRemoval obj:
+                return dataManager.EvaluateItemRemoval(obj.targetIndex);
+            default:
+                return false;
+        }
+    }
 
+    public KitchenInteractable GetAssociatedInteractable() => this.associatedInteractable;
 
     #region Container Actions
 
@@ -68,6 +82,9 @@ public class SlotContainer : IContainer
                 break;
             case ContainerFunctionType.DISPOSE:
                 DisposeAction();
+                break;
+            case ContainerFunctionType.SERVE:
+                ServeAction();
                 break;
             case ContainerFunctionType.NONE:
             default:
@@ -88,7 +105,6 @@ public class SlotContainer : IContainer
 
     void SetupTimedOperation()
     {   
-
         if(dataManager.IsContainerEmpty())
         {
             Debug.LogWarning("Halted beforehand");
@@ -140,6 +156,13 @@ public class SlotContainer : IContainer
         functionCompletionTime = -1;
     }
 
+    void ServeAction()
+    {
+       EventManager.EvaluateCounterOrder.Invoke(((CounterInteractable)this.associatedInteractable));
+       DisposeAction();
+       CloseContainer();
+    }
+
     #endregion
 
     public void GetConfigInfo(out string title, out ContainerFunctionType funcType)
@@ -167,20 +190,5 @@ public class SlotContainer : IContainer
         }
     }
 
-    public bool ProcessContainerRequest(IContainerRequest req)
-    {   
-        switch(req)
-        {
-            case ContainerAddItem obj:
-                return dataManager.AddItem(obj.item , obj.targetIndex);
-            case ContainerRemoveItem obj:
-                return dataManager.RemoveItem(obj.targetIndex);
-            case ContainerEvaluateItemAddition obj:
-                return dataManager.EvaluateItemAddition(obj.item , obj.targetIndex);
-            case ContainerEvaluateItemRemoval obj:
-                return dataManager.EvaluateItemRemoval(obj.targetIndex);
-            default:
-                return false;
-        }
-    }
+
 }

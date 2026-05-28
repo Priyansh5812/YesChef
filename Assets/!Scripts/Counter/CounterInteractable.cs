@@ -33,6 +33,11 @@ public class CounterInteractable : KitchenInteractable
     {
         order?.Dispose();
     }
+}
 
+
+
+public class CounterInteractableView
+{
     
 }

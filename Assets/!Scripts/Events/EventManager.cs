@@ -26,6 +26,12 @@ public static class EventManager
     {
         get; private set;
     } = new();
+
+    public static ActionEvent<CounterInteractable> EvaluateCounterOrder
+    {
+        get; private set;
+    } = new();
+
 }
 
 public class ActionEvent

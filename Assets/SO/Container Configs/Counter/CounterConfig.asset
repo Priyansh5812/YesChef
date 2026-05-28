@@ -19,7 +19,8 @@ MonoBehaviour:
   <IsFunctionPassive>k__BackingField: 0
   <CanRestockFromConfig>k__BackingField: 0
   <ItemAdditionCompatible>k__BackingField: 1
-  <ItemRemovalCompatible>k__BackingField: 1
+  <ItemRemovalCompatible>k__BackingField: 0
+  <CheckItemForOrderEligibility>k__BackingField: 1
   <FallbackSlotCount>k__BackingField: 3
   <IgnoreItemAdditionTypes>k__BackingField: 
   <ModifiedItemSprites>k__BackingField:

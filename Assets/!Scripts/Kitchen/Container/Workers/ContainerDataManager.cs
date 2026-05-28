@@ -86,6 +86,27 @@ public class ContainerDataManager
 
         if(targetIndex >= ContainerData.Length)
             return false;
+            
+        if(m_data.CheckItemForOrderEligibility)
+        {   
+            var interactable = ((SlotContainer)this.container).GetAssociatedInteractable();
+
+            if(interactable != null)
+            {
+                Order order = ((CounterInteractable) (interactable)).GetOrder();
+
+                if(order.orderItems.Count <= targetIndex)
+                    return false;
+                
+                if(!order.orderItems[targetIndex].IsEqual(item))
+                    return false;
+            }
+            else
+            {
+                Debug.LogWarning("Item Addition check was done under order with Null Interactable reference.\n Check was Skipped !!!");
+            }
+
+        }
 
         foreach(var i in m_data.IgnoreItemAdditionTypes)
         {
