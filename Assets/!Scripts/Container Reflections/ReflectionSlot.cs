@@ -73,10 +73,12 @@ public class ReflectionSlot : MonoBehaviour , IBeginDragHandler , IEndDragHandle
         if(this.system.associatedContainer == req.Value.associatedContainer)
             return;
 
-        if(this.system.associatedContainer.EvaluateItemAddition(req.Value.kitchenItem,this.item.originalArrayIndex) && req.Value.associatedContainer.EvaluateItemRemoval(req.Value.itemIndex))
+        IContainerRequest additionEvaluationReq = new ContainerEvaluateItemAddition(req.Value.kitchenItem , this.item.originalArrayIndex);
+        IContainerRequest removalEvaluationReq = new ContainerEvaluateItemRemoval(req.Value.itemIndex);
+        if(this.system.associatedContainer.ProcessContainerRequest(additionEvaluationReq) && req.Value.associatedContainer.ProcessContainerRequest(removalEvaluationReq))
         {
-            this.system.associatedContainer.AddItem(req.Value.kitchenItem,this.item.originalArrayIndex);
-            req.Value.associatedContainer.RemoveItem(req.Value.itemIndex);
+            this.system.associatedContainer.ProcessContainerRequest(new ContainerAddItem(req.Value.kitchenItem,this.item.originalArrayIndex));
+            req.Value.associatedContainer.ProcessContainerRequest(new ContainerRemoveItem(req.Value.itemIndex));
             EventManager.RefreshContainerReflections.Invoke();
         }
     }
