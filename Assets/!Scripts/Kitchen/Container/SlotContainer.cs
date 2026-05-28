@@ -158,9 +158,23 @@ public class SlotContainer : IContainer
 
     void ServeAction()
     {
-       EventManager.EvaluateCounterOrder.Invoke(((CounterInteractable)this.associatedInteractable));
-       DisposeAction();
-       CloseContainer();
+        var counter = this.associatedInteractable as CounterInteractable;
+
+        if(counter == null)
+        {
+            Debug.LogError($"A Serve function was intended on an interactable which is not of CounterInteractable type\n Function Halted");
+            return;
+        }
+
+        if(!((CounterInteractable)this.associatedInteractable).ValidateOrder(dataManager.ContainerData))
+        {   
+            Debug.LogError("Invalid Serve");
+            return;
+        }
+
+        counter.ServeOrder();
+        DisposeAction();
+        CloseContainer();
     }
 
     #endregion

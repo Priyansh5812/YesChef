@@ -1,43 +1,99 @@
 using UnityEngine;
-
+using System.Collections;
+using System.Collections.Generic;
 
 public class CounterInteractable : KitchenInteractable
-{
+{   
+
+    [SerializeField] CounterViewData viewData;
     Order order;
+    CounterView view;
+    Coroutine orderTimerRoutine = null;
+    float secsElapsedFromOrder;
 
     void OnEnable()
     {
         order ??= new();
         order.Initialize();
-        
     }
+
+    protected override void Start()
+    {   
+        base.Start();
+        view ??= new(this , this.viewData);
+    }
+
+#region ORDER
     public Order GetOrder() => this.order;
 
-    public void AddOrder(KitchenItem item)
+    public void DispatchOrder(List<KitchenItem> orderItems)
     {   
-        if(item == null)
-        {
-            Debug.LogError("A Null Item was intended to be registered as an order");
-            return;
-        }
-        
-        order?.AddOrderItem(item);
+        ClearOrder();
+        order?.AddItems(orderItems);
+        InitializeOrderView();
+        orderTimerRoutine = StartCoroutine(OrderTimerRoutine()); 
     }
 
-    public void ClearOrder()
+    void InitializeOrderView()
     {
+        view?.RefreshOrderView(this.order);
+    }
+
+    public bool ValidateOrder(KitchenItem[] items)
+    {   
+        int size = order.Count;
+
+        if(size == 0)
+            return false;
+
+        for(int i = 0 ; i < size; i++)
+        {
+            if(!order.IsOrderItemEqual(items[i] , i))
+                return false;    
+        }
+        return true;
+    }
+
+    public void ServeOrder()
+    {
+        EventManager.PreOrderServed.Invoke(new OrderServeData(this, this.order , this.secsElapsedFromOrder));
+        ClearOrder();
+    }
+
+    void ClearOrder()
+    {   
+        if(orderTimerRoutine != null)
+        {
+            StopCoroutine(orderTimerRoutine);
+        }
+        
         order?.ClearOrderItems();
+        view.UpdateCounterTimer("--:--");
+        view.ToggleOrderView(false);
+    }
+    
+    IEnumerator OrderTimerRoutine()
+    {
+        while(true)
+        {   
+            secsElapsedFromOrder += Time.deltaTime;
+            int floorSecs = Mathf.FloorToInt(secsElapsedFromOrder);
+            int mins = floorSecs / 60;
+            int secs = floorSecs % 60;
+            view.UpdateCounterTimer($"{(mins < 10 ? $"0{mins}" : mins)}:{(secs < 10 ? $"0{secs}" : secs)}");
+            yield return null;
+        }
+    }
+
+#endregion
+
+    public void DisplayScore(int scoreAmt)
+    {
+        Debug.Log($"Score : +{scoreAmt}");
     }
 
     void OnDisable()
     {
         order?.Dispose();
     }
-}
-
-
-
-public class CounterInteractableView
-{
-    
 }

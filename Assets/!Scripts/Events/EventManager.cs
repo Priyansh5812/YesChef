@@ -27,7 +27,7 @@ public static class EventManager
         get; private set;
     } = new();
 
-    public static ActionEvent<CounterInteractable> EvaluateCounterOrder
+    public static ActionEvent<OrderServeData> PreOrderServed
     {
         get; private set;
     } = new();

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a119346c2418e464fa12a63513ab987c, type: 3}
   m_Name: OrderConfig
   m_EditorClassIdentifier: Assembly-CSharp::OrderConfig
-  <PointConfig>k__BackingField:
+  <ItemPointMapping>k__BackingField:
     _serializedList:
     - Key: 0
       Value: 10
@@ -20,7 +20,7 @@ MonoBehaviour:
       Value: 20
     - Key: 2
       Value: 30
-  <possibleOrderItems>k__BackingField:
+  <PossibleOrderItems>k__BackingField:
   - itemType: 0
     sprite: {fileID: 21300000, guid: 968f3b877a66ec144881eeab3e832d83, type: 3}
     isChopped: 1
@@ -33,6 +33,7 @@ MonoBehaviour:
     sprite: {fileID: 21300000, guid: 341cefceda385a54fa80db32cb670513, type: 3}
     isChopped: 0
     isCooked: 1
-  <maxOrderTime>k__BackingField:
-    Mins: 0
+  <OrderDispatchCheckFreq>k__BackingField: 20
+  <MaxOrderTime>k__BackingField:
+    Mins: 1
     Secs: 0

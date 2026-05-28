@@ -76,6 +76,11 @@ public class KitchenInteractable : MonoBehaviour
 
     public void DisableInteraction()
     {
+        if(container.IsOpened)
+        {
+            container.CloseContainer();
+        }
+
         EventManager.RefreshContainerReflections.RemoveListener(RefreshContainerReflection);
     }
 

@@ -95,10 +95,10 @@ public class ContainerDataManager
             {
                 Order order = ((CounterInteractable) (interactable)).GetOrder();
 
-                if(order.orderItems.Count <= targetIndex)
+                if(order.Count <= targetIndex)
                     return false;
                 
-                if(!order.orderItems[targetIndex].IsEqual(item))
+                if(!order.IsOrderItemEqual(item , targetIndex))
                     return false;
             }
             else

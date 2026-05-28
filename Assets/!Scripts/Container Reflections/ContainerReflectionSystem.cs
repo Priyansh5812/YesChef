@@ -81,25 +81,27 @@ public class ContainerReflectionSystem : MonoBehaviour
             i.DisableSlot();
         }
 
-        if(order.orderItems.Count > orderSlots.Length)
+        int orderItemsCount = order.Count;
+
+        if(orderItemsCount > orderSlots.Length)
         {
-            Debug.LogError($"Order item count exceeds the cached order slot length\n items: {order.orderItems.Count}\n slots: {orderSlots.Length}");
+            Debug.LogError($"Order item count exceeds the cached order slot length\n items: {orderItemsCount}\n slots: {orderSlots.Length}");
             return;
         }
         
-        for(int i = 0 ; i < order.orderItems.Count; i++)
+        for(int i = 0 ; i < orderItemsCount; i++)
         {   
             orderSlots[i].EnableSlot();
-            orderSlots[i].Initialize(order.orderItems[i]);
+            orderSlots[i].Initialize(order.GetOrderItemAt(i));
         }
 
-        if(order.orderItems.Count > slots.Length)
+        if(orderItemsCount > slots.Length)
         {
-            Debug.LogError($"Order item count exceeds the cached slot length\n items: {order.orderItems.Count}\n slots: {slots.Length}");
+            Debug.LogError($"Order item count exceeds the cached slot length\n items: {orderItemsCount}\n slots: {slots.Length}");
             return;
         }
 
-        for(int i = 0; i < order.orderItems.Count; i++)
+        for(int i = 0; i < orderItemsCount; i++)
         {
             slots[i].gameObject.SetActive(true);
             slots[i].InitializeSlot(items[i] , i);
@@ -209,14 +211,6 @@ public class ContainerReflectionSystem : MonoBehaviour
     
     #endregion
 
-    #region Counter-Related
-
-    void ReflectCounterOrder()
-    {
-        
-    }
-
-    #endregion
     void PerformContainerAction()
     {
         associatedContainer?.PerformAction();
