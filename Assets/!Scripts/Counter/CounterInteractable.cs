@@ -31,6 +31,7 @@ public class CounterInteractable : KitchenInteractable
         ClearOrder();
         order?.AddItems(orderItems);
         InitializeOrderView();
+        secsElapsedFromOrder = 0f;
         orderTimerRoutine = StartCoroutine(OrderTimerRoutine()); 
     }
 
@@ -70,6 +71,7 @@ public class CounterInteractable : KitchenInteractable
         order?.ClearOrderItems();
         view.UpdateCounterTimer("--:--");
         view.ToggleOrderView(false);
+       
     }
     
     IEnumerator OrderTimerRoutine()
