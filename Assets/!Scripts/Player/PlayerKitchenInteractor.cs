@@ -6,13 +6,20 @@ public class PlayerKitchenInteractor : MonoBehaviour
     KitchenInteractable currentInteractable = null;
     SlotContainer inventoryContainer;
     ContainerReflectionSystem inventoryReflection;
+
+    bool canInteract;
+
     void OnEnable()
     {
         InitListeners();
     }
 
     void InitListeners()
-    {
+    {   
+        EventManager.OnGameStarted.AddListener(EnableInteraction);
+        EventManager.OnGamePaused.AddListener(DisableInteraction);
+        EventManager.OnGameResumed.AddListener(EnableInteraction);
+        EventManager.OnGameOver.AddListener(DisableInteraction);
         EventManager.RefreshContainerReflections.AddListener(RefreshInventoryReflection);
     }
 
@@ -69,8 +76,23 @@ public class PlayerKitchenInteractor : MonoBehaviour
     }
 
     #endregion
-    void DeInitListeners()
+
+    void EnableInteraction()
     {
+        canInteract = true;
+    }
+
+    void DisableInteraction()
+    {
+        canInteract = false;
+    }
+
+    void DeInitListeners()
+    {   
+        EventManager.OnGameStarted.RemoveListener(EnableInteraction);
+        EventManager.OnGamePaused.RemoveListener(DisableInteraction);
+        EventManager.OnGameResumed.RemoveListener(EnableInteraction);
+        EventManager.OnGameOver.RemoveListener(DisableInteraction);
         EventManager.RefreshContainerReflections.RemoveListener(RefreshInventoryReflection);
     }
 

@@ -176,7 +176,7 @@ public class SlotContainer : IContainer
         DisposeAction();
         CloseContainer();
     }
-
+    
     #endregion
 
     public void GetConfigInfo(out string title, out ContainerFunctionType funcType)
@@ -204,5 +204,17 @@ public class SlotContainer : IContainer
         }
     }
 
+    public void ResetContainer()
+    {
+        this.CloseContainer();
+        if(IsContainerLocked)
+        {
+            this.associatedInteractable.StopAllCoroutines();
+            IsContainerLocked = false;
+            functionProgression = 0f; 
+            functionCompletionTime = -1;
+        }
 
+        DisposeAction();
+    }
 }

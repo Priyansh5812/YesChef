@@ -19,7 +19,6 @@ public class KitchenInteractable : MonoBehaviour
     [SerializeField] protected ContainerConfig m_data;
     protected SlotContainer container;
     protected ContainerReflectionSystem reflection;
-    Coroutine slotFunctionRoutineReference;
 
     protected virtual void Awake()
     {
@@ -27,12 +26,23 @@ public class KitchenInteractable : MonoBehaviour
         container ??= new(m_data, this);   
     }
 
+    protected virtual void OnEnable()
+    {
+        InitListeners();
+    }
+
     protected virtual void Start()
     {
         reflection = EventManager.GetKitchenContainerReflectionReference.Invoke();
     }
 
+    void InitListeners()
+    {
+        EventManager.OnGameOver.AddListener(ForceContainerClosure);
+    }
+
     Vector3 GetInteractionDirection() => this.transform.TransformDirection(this.referenceInteractionDirection);
+
 
     public void EnableInteraction()
     {
@@ -86,7 +96,7 @@ public class KitchenInteractable : MonoBehaviour
 
     public void InitiateSlotFunctionTimer(float duration , Action<float> OnProgressUpdation = null , Action OnTimerCompletion = null)
     {
-        slotFunctionRoutineReference = StartCoroutine(SlotFunctionTimerRoutine(duration, OnProgressUpdation , OnTimerCompletion));
+        StartCoroutine(SlotFunctionTimerRoutine(duration, OnProgressUpdation , OnTimerCompletion));
     }
 
     IEnumerator SlotFunctionTimerRoutine(float duration ,Action<float> OnProgressUpdation = null, Action OnTimerCompletion = null)
@@ -102,8 +112,25 @@ public class KitchenInteractable : MonoBehaviour
             OnProgressUpdation?.Invoke(norm);
             yield return null;
         }
-
         OnTimerCompletion?.Invoke();
+    }
+
+    void ForceContainerClosure()
+    {
+        if(this.container.IsOpened)
+        {   
+            this.container.ResetContainer();
+        }
+    }
+
+    void DeInitListeners()
+    {
+        EventManager.OnGameOver.RemoveListener(ForceContainerClosure);
+    }
+
+    protected virtual void OnDisable()
+    {
+        DeInitListeners();
     }
 
 #region UNITY_EDITOR

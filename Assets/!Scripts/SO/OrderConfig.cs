@@ -20,16 +20,9 @@ public class OrderConfig : ScriptableObject
         get; private set;
     }
 
-    [field : SerializeField] public OrderTime MaxOrderTime
+    [field : SerializeField] public TimeSpan MaxOrderTime
     {
         get; private set;
     }
     
-}
-
-[System.Serializable]
-public struct OrderTime
-{
-    public uint Mins;
-    public uint Secs;
 }

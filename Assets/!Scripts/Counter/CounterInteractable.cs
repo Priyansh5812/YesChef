@@ -10,9 +10,11 @@ public class CounterInteractable : KitchenInteractable
     CounterView view;
     Coroutine orderTimerRoutine = null;
     float secsElapsedFromOrder;
+    bool isPaused;
 
-    void OnEnable()
-    {
+    protected override void OnEnable()
+    {   
+        base.OnEnable();
         order ??= new();
         order.Initialize();
     }
@@ -61,7 +63,7 @@ public class CounterInteractable : KitchenInteractable
         ClearOrder();
     }
 
-    void ClearOrder()
+    public void ClearOrder()
     {   
         if(orderTimerRoutine != null)
         {
@@ -78,6 +80,11 @@ public class CounterInteractable : KitchenInteractable
     {
         while(true)
         {   
+            while(isPaused)
+            {
+                yield return null;
+            }
+
             secsElapsedFromOrder += Time.deltaTime;
             int floorSecs = Mathf.FloorToInt(secsElapsedFromOrder);
             int mins = floorSecs / 60;
@@ -87,6 +94,12 @@ public class CounterInteractable : KitchenInteractable
         }
     }
 
+    public void SetPauseRunningOrder(bool value)
+    {
+        isPaused = value;
+    }
+
+
 #endregion
 
     public void DisplayScore(int scoreAmt)
@@ -94,8 +107,9 @@ public class CounterInteractable : KitchenInteractable
         Debug.Log($"Score : +{scoreAmt}");
     }
 
-    void OnDisable()
-    {
+    protected override void OnDisable()
+    {   
+        base.OnDisable();
         order?.Dispose();
     }
 }

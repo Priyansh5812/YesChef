@@ -32,6 +32,31 @@ public static class EventManager
         get; private set;
     } = new();
 
+    public static ActionEvent<int> OnOrderServed
+    {
+        get; private set;
+    } = new();
+
+    public static ActionEvent OnGameStarted
+    {
+        get; private set;
+    } = new();
+
+    public static ActionEvent OnGamePaused
+    {
+        get; private set;
+    } = new();
+    
+    public static ActionEvent OnGameResumed
+    {
+        get; private set;
+    } = new();
+    
+    public static ActionEvent OnGameOver
+    {
+        get; private set;
+    } = new();
+
 }
 
 public class ActionEvent

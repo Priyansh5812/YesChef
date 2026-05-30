@@ -41,12 +41,19 @@ public class ContainerReflectionSystem : MonoBehaviour
 
     void OnEnable()
     {
-        actionBtn?.onClick.AddListener(PerformContainerAction);
+        InitListeners();
 
-        if(canTickProgression)
-            ProgressionTickRoutine = StartCoroutine(ReflectContainerAssociatedActiveFunctions());
     }
     
+    void InitListeners()
+    {
+        EventManager.OnGameOver.AddListener(StopProgressionTick);
+        EventManager.OnGameStarted.AddListener(InitiateProgressionTick);
+        actionBtn?.onClick.AddListener(PerformContainerAction);
+    }
+
+
+
 
     public void ReflectContainer(KitchenItem[] items , IContainer container)
     {   
@@ -157,6 +164,16 @@ public class ContainerReflectionSystem : MonoBehaviour
 
     bool isVisible = true;
 
+    void InitiateProgressionTick()
+    {   
+        if(!canTickProgression)
+            return;
+
+        StopProgressionTick();
+        if(canTickProgression)
+            ProgressionTickRoutine = StartCoroutine(ReflectContainerAssociatedActiveFunctions());
+    }
+
     IEnumerator ReflectContainerAssociatedActiveFunctions()
     {
         while(canTickProgression)
@@ -168,7 +185,7 @@ public class ContainerReflectionSystem : MonoBehaviour
                 yield return null;
                 continue;
             }
-
+                
             associatedContainer.GetFunctionCompletionStat(out float progress , out float completionTime);
 
             if(completionTime == -1)
@@ -216,12 +233,25 @@ public class ContainerReflectionSystem : MonoBehaviour
         associatedContainer?.PerformAction();
     }
 
-    void OnDisable()
-    {
-        actionBtn?.onClick.RemoveListener(PerformContainerAction);
+    void StopProgressionTick()
+    {   
         if(ProgressionTickRoutine != null)
         {
             StopCoroutine(ProgressionTickRoutine);
+            ProgressionTickRoutine = null;
         }
+    }
+
+    void DeInitListeners()
+    {   
+        EventManager.OnGameOver.RemoveListener(StopProgressionTick);
+        EventManager.OnGameStarted.RemoveListener(InitiateProgressionTick);
+        actionBtn?.onClick.RemoveListener(PerformContainerAction);
+    }
+
+    void OnDisable()
+    {
+        DeInitListeners();
+
     }
 }

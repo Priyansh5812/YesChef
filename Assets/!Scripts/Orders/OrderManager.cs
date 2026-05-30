@@ -8,6 +8,11 @@ public class OrderManager : MonoBehaviour
     HashSet<CounterInteractable> activeCounters;
     List<KitchenItem> aux;
 
+    public bool IsPaused
+    {
+        get; private set;
+    }
+
     void OnEnable()
     {   
         InitializeCounters();
@@ -28,14 +33,19 @@ public class OrderManager : MonoBehaviour
     }
 
     void InitListeners()
-    {
+    {   
+        EventManager.OnGameStarted.AddListener(InitiateOrderDispatch);
+        EventManager.OnGameOver.AddListener(PerformCleanup);
+        EventManager.OnGamePaused.AddListener(PauseOrderDispatch);
+        EventManager.OnGameResumed.AddListener(ResumeOrderDispatch);
         EventManager.PreOrderServed.AddListener(ProcessServedOrder);
     }
 
-    void Start()
+    void InitiateOrderDispatch()
     {
         InvokeRepeating(nameof(CheckForOrderDispatch),5.0f,orderConfig.OrderDispatchCheckFreq);
     }
+
     #region ORDER-PREP
     void PrepareOrderItems()
     {
@@ -55,7 +65,10 @@ public class OrderManager : MonoBehaviour
     #endregion
 
     void CheckForOrderDispatch()
-    {
+    {   
+        if(IsPaused)
+            return;
+
          if(inactiveCounters.Count == 0)
             return;
 
@@ -84,13 +97,48 @@ public class OrderManager : MonoBehaviour
         }
 
         score -= Mathf.FloorToInt(data.timeElapsed);
+        EventManager.OnOrderServed.Invoke(score);
         data.counter.DisplayScore(score);
         inactiveCounters.Add(data.counter);
         activeCounters.Remove(data.counter);
     }
 
-    void DeInitListeners()
+    void PauseOrderDispatch()
     {
+        IsPaused = true;
+        foreach(var i in activeCounters)
+            i.SetPauseRunningOrder(IsPaused);
+    }
+
+    void ResumeOrderDispatch()
+    {
+        IsPaused = false;
+        foreach(var i in activeCounters)
+            i.SetPauseRunningOrder(IsPaused);
+    }
+
+    void PerformCleanup()
+    {
+        CancelInvoke(nameof(CheckForOrderDispatch));
+        ResetCounters();
+    }
+
+    void ResetCounters()
+    {
+        foreach(var i in activeCounters)
+        {
+            i.ClearOrder();
+            inactiveCounters.Add(i);
+        }
+    }
+
+
+    void DeInitListeners()
+    {   
+        EventManager.OnGameStarted.RemoveListener(InitiateOrderDispatch);
+        EventManager.OnGameOver.RemoveListener(PerformCleanup);
+        EventManager.OnGamePaused.RemoveListener(PauseOrderDispatch);
+        EventManager.OnGameResumed.RemoveListener(ResumeOrderDispatch);
         EventManager.PreOrderServed.RemoveListener(ProcessServedOrder);
     }
 
@@ -116,7 +164,6 @@ public class OrderManager : MonoBehaviour
             aux = null;
         }
 
-        CancelInvoke(nameof(CheckForOrderDispatch));
         DeInitListeners();
         DeInitializeCounters();
     }

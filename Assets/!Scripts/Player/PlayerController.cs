@@ -13,6 +13,8 @@ public class PlayerController : MonoBehaviour
     Vector3 currentVelocity;
     Vector3 lastVelocity;
 
+    Vector3 startPosition;
+    Quaternion startRotation;
     bool isActive = true;
 
     private void Awake()
@@ -22,9 +24,20 @@ public class PlayerController : MonoBehaviour
     }
 
     private void OnEnable()
-    {
+    {   
+        EventManager.OnGameStarted.AddListener(ResetTransform);
+        EventManager.OnGameStarted.AddListener(EnableInteraction);
+        EventManager.OnGamePaused.AddListener(DisableInteraction);
+        EventManager.OnGameResumed.AddListener(EnableInteraction);
+        EventManager.OnGameOver.AddListener(DisableInteraction);
         EventManager.OnContainerOpened.AddListener(DisableInteraction);
         EventManager.OnContainerClosed.AddListener(EnableInteraction);
+    }
+
+    void Start()
+    {
+        startPosition = this.transform.position;
+        startRotation = this.transform.rotation;
     }
 
     void Update()
@@ -95,16 +108,20 @@ public class PlayerController : MonoBehaviour
 
 
     void LateUpdate()
-    {
+    {   
         cc.Move(currentVelocity * Time.deltaTime);
     }
-
 
     #region OTHERS
     Vector3 GetAccelaration()
     {
         Vector3 accDir = targetVelocity - currentVelocity;
         return accDir.normalized * playerData.Accelaration;
+    }
+    
+    void ResetTransform()
+    {
+        this.transform.SetPositionAndRotation(startPosition, startRotation);
     }
 
     void EnableInteraction()
@@ -115,12 +132,18 @@ public class PlayerController : MonoBehaviour
     void DisableInteraction()
     {
         isActive = false;
+        lastVelocity = currentVelocity = Vector3.zero;
     }
 
     #endregion
 
     void OnDisable()
-    {
+    {   
+        EventManager.OnGameStarted.RemoveListener(ResetTransform);
+        EventManager.OnGameStarted.RemoveListener(EnableInteraction);
+        EventManager.OnGamePaused.RemoveListener(DisableInteraction);
+        EventManager.OnGameResumed.RemoveListener(EnableInteraction);
+        EventManager.OnGameOver.RemoveListener(DisableInteraction);
         EventManager.OnContainerOpened.RemoveListener(DisableInteraction);
         EventManager.OnContainerClosed.RemoveListener(EnableInteraction);
     }
