@@ -134,7 +134,9 @@ public class PlayerController : MonoBehaviour
     void ResetTransform()
     {
         // return the player to the start of the round
-        this.transform.SetPositionAndRotation(startPosition, startRotation);
+        cc.enabled = false;
+        transform.SetPositionAndRotation(startPosition, startRotation);
+        cc.enabled = true;
     }
 
     void EnableInteraction()
