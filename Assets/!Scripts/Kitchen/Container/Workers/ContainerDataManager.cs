@@ -155,4 +155,40 @@ public class ContainerDataManager
         return isContainerEmpty;
     }
 
+    public bool HasValidItems(ContainerFunctionType type)
+    {
+        switch(m_data.ContainerFunction)
+        {
+            case ContainerFunctionType.SLICE:
+                return CheckSliceCompatibility();
+            case ContainerFunctionType.COOK:
+                return CheckCookCompatibility();
+            default:
+                return true;
+        }
+    }
+
+    bool CheckSliceCompatibility()
+    {   
+        foreach(var i in ContainerData)
+        {
+            if(i != null && !i.isChopped)
+                return true;
+        }
+        return false;
+    }
+
+    bool CheckCookCompatibility()
+    {   
+        foreach(var i in ContainerData)
+        {
+            if(i != null && !i.isCooked)
+                return true;
+        }
+
+        return false;
+    }
+
+    
+
 }

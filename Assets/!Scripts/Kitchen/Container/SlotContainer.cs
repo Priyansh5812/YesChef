@@ -81,6 +81,9 @@ public class SlotContainer : IContainer
         if(IsContainerLocked)
             return;
 
+        if(!dataManager.HasValidItems(m_data.ContainerFunction))
+            return;    
+
         switch(m_data.ContainerFunction)
         {
             case ContainerFunctionType.SLICE:

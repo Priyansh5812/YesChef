@@ -6,8 +6,8 @@ public class KitchenItem
 {
     public KitchenItemType itemType;
     public Sprite sprite;
-     public bool isChopped;
-     public bool isCooked;
+    public bool isChopped;
+    public bool isCooked;
 
     public KitchenItem(KitchenItem otherItem)
     {
