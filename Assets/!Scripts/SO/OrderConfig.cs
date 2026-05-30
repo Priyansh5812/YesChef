@@ -2,6 +2,7 @@ using UnityEngine;
 using AYellowpaper.SerializedCollections;
 
 [CreateAssetMenu(fileName = "OrderConfig", menuName = "Scriptable Objects/OrderConfig")]
+// order selection and scoring rules
 public class OrderConfig : ScriptableObject
 {
     [field : SerializeField , SerializedDictionary("ItemType","Points")] public SerializedDictionary<KitchenItemType , int> 

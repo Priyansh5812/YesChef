@@ -1,6 +1,7 @@
 using UnityEngine;
 
 [System.Serializable]
+// stores one kitchen item and its cooked state
 public class KitchenItem
 {
     public KitchenItemType itemType;
@@ -10,6 +11,7 @@ public class KitchenItem
 
     public KitchenItem(KitchenItem otherItem)
     {
+        // makes a copy of an existing item
         this.itemType = otherItem.itemType;
         this.sprite = otherItem.sprite;
         this.isChopped = otherItem.isChopped;
@@ -18,6 +20,7 @@ public class KitchenItem
 
     public bool IsEqual(KitchenItem other)
     {
+        // checks whether two items match
         return (
             this.itemType == other.itemType
             &&

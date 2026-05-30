@@ -1,4 +1,5 @@
 using UnityEngine;
+// owns the raw item data for a container
 public class ContainerDataManager
 {
     public KitchenItem[] ContainerData
@@ -9,6 +10,7 @@ public class ContainerDataManager
 
     public ContainerDataManager(IContainer container, ContainerConfig config)
     {
+        // remember the container config and prepare the slots
         this.container = container;
         this.m_data = config;
         Initialize();
@@ -16,6 +18,7 @@ public class ContainerDataManager
 
     void Initialize()
     {   
+        // build the slot array from the config
         if(m_data.InitItems.Count == 0)
         {
             ContainerData = new KitchenItem[m_data.FallbackSlotCount];
@@ -33,6 +36,7 @@ public class ContainerDataManager
     
     public bool AddItem(KitchenItem item, int targetIndex)
     {   
+        // place an item into an empty slot
         Debug.Log("Before Add:");
 
         foreach(var i in ContainerData)
@@ -57,6 +61,7 @@ public class ContainerDataManager
 
     public bool RemoveItem(int targetIndex)
     {   
+        // clear a slot and restock if the config allows it
         if(ContainerData[targetIndex] == null)
             return false;
 
@@ -70,11 +75,13 @@ public class ContainerDataManager
 
     void Restock(int restockIndex)
     {
+        // rebuild the slot item from the config template
         ContainerData[restockIndex] = new KitchenItem(m_data.InitItems[restockIndex]);
     }
 
     public bool EvaluateItemAddition(KitchenItem item, int targetIndex)
     {   
+        // check whether the item can be added to this slot
         if(container.IsContainerLocked)
             return false;
 
@@ -119,6 +126,7 @@ public class ContainerDataManager
 
     public bool EvaluateItemRemoval(int targetIndex)
     {   
+        // check whether the slot can be emptied
         if(container.IsContainerLocked)
             return false;
 
@@ -133,6 +141,7 @@ public class ContainerDataManager
     
     public bool IsContainerEmpty()
     {
+        // scan the slots for any remaining items
         bool isContainerEmpty = true;
         foreach(var i in ContainerData)
         {

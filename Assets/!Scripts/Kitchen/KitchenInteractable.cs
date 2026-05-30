@@ -6,6 +6,7 @@ using UnityEditor;
 #endif
 
 [RequireComponent(typeof(BoxCollider))]
+// base interactable for kitchen containers
 public class KitchenInteractable : MonoBehaviour
 {   
     [SerializeField] protected bool isInteractionDirectionless = false;
@@ -22,22 +23,26 @@ public class KitchenInteractable : MonoBehaviour
 
     protected virtual void Awake()
     {
+        // cache the collider and prepare the container
         interactionTrigger = this.GetComponent<BoxCollider>();
         container ??= new(m_data, this);   
     }
 
     protected virtual void OnEnable()
     {
+        // listen for shared game events
         InitListeners();
     }
 
     protected virtual void Start()
     {
+        // grab the reflection view used by this interactable
         reflection = EventManager.GetKitchenContainerReflectionReference.Invoke();
     }
 
     void InitListeners()
     {
+        // close the container when the round ends
         EventManager.OnGameOver.AddListener(ForceContainerClosure);
     }
 
@@ -46,11 +51,13 @@ public class KitchenInteractable : MonoBehaviour
 
     public void EnableInteraction()
     {
+        // allow the player to refresh the reflection view
         EventManager.RefreshContainerReflections.AddListener(RefreshContainerReflection);
     }
 
     public void TryInitiateInteraction(Vector3 playerForward)
     {   
+        // only open when the player is facing the right direction
         if(isInteractionDirectionless)
         {
             InitiateInteraction();
@@ -70,6 +77,7 @@ public class KitchenInteractable : MonoBehaviour
 
     void InitiateInteraction()
     {   
+        // toggle the container open state
         if(!container.IsOpened)
         {   
             EventManager.RefreshContainerReflections.Invoke();
@@ -81,11 +89,13 @@ public class KitchenInteractable : MonoBehaviour
 
     void RefreshContainerReflection()
     {   
+        // push the latest data into the reflection view
         this.container.UpdateReflection(reflection);
     }
 
     public void DisableInteraction()
     {
+        // shut the container and remove the refresh hook
         if(container.IsOpened)
         {
             container.CloseContainer();
@@ -96,12 +106,13 @@ public class KitchenInteractable : MonoBehaviour
 
     public void InitiateSlotFunctionTimer(float duration , Action<float> OnProgressUpdation = null , Action OnTimerCompletion = null)
     {
+        // run a timed container action
         StartCoroutine(SlotFunctionTimerRoutine(duration, OnProgressUpdation , OnTimerCompletion));
     }
 
     IEnumerator SlotFunctionTimerRoutine(float duration ,Action<float> OnProgressUpdation = null, Action OnTimerCompletion = null)
     {   
-        // Avoiding WaitForSeconds due to hidden allocations
+        // avoids waitforseconds allocations
         float t = duration;
         float norm; 
         while(t > 0)
@@ -117,6 +128,7 @@ public class KitchenInteractable : MonoBehaviour
 
     void ForceContainerClosure()
     {
+        // clear the container when the game ends
         if(this.container.IsOpened)
         {   
             this.container.ResetContainer();
@@ -125,11 +137,13 @@ public class KitchenInteractable : MonoBehaviour
 
     void DeInitListeners()
     {
+        // remove shared listeners before shutdown
         EventManager.OnGameOver.RemoveListener(ForceContainerClosure);
     }
 
     protected virtual void OnDisable()
     {
+        // stop listening when this object is disabled
         DeInitListeners();
     }
 
@@ -137,11 +151,13 @@ public class KitchenInteractable : MonoBehaviour
 
     void OnValidate()
     {
+        // keep the collider reference in sync
         interactionTrigger = this.GetComponent<BoxCollider>();
     }
 
     void OnDrawGizmos()
     {
+        // draw the trigger and facing direction
         var color = Color.green;
         color.a = 0.5f;
         Gizmos.color =  color;

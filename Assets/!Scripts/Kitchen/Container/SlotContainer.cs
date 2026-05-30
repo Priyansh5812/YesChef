@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 
+// handles one container instance and its actions
 public class SlotContainer : IContainer
 {   
     ContainerConfig m_data;
@@ -20,6 +21,7 @@ public class SlotContainer : IContainer
 
     public SlotContainer(ContainerConfig data , KitchenInteractable interactable)
     {
+        // keep the config and interactable together
         m_data = data;
         dataManager = new(this, m_data);
         this.associatedInteractable = interactable;
@@ -27,17 +29,20 @@ public class SlotContainer : IContainer
 
     public void UpdateReflection(ContainerReflectionSystem reflection)
     {   
+        // push the current container data into the reflection view
         reflection.ReflectContainer(dataManager.ContainerData , this);
     }
 
     public void OpenContainer()
     {
+        // mark the container as open and notify listeners
         EventManager.OnContainerOpened.Invoke();
         IsOpened = true;
     }
     
     public void CloseContainer()
     {   
+        // respect locked actions and active drag operations
         if(IsContainerLocked && !m_data.IsFunctionPassive)
             return;
 
@@ -50,6 +55,7 @@ public class SlotContainer : IContainer
 
     public bool ProcessContainerRequest(IContainerRequest req)
     {   
+        // route the request to the matching data manager call
         switch(req)
         {
             case ContainerAddItem obj:
@@ -71,6 +77,7 @@ public class SlotContainer : IContainer
 
     public void PerformAction()
     {   
+        // run the action that matches the container setup
         if(IsContainerLocked)
             return;
 
@@ -95,6 +102,7 @@ public class SlotContainer : IContainer
 
     void DisposeAction()
     {   
+        // clear every slot in the container
         for(int i = 0 ; i < dataManager.ContainerData.Length; i++)
         {
             dataManager.RemoveItem(i);
@@ -105,6 +113,7 @@ public class SlotContainer : IContainer
 
     void SetupTimedOperation()
     {   
+        // start a timed action on the container
         if(dataManager.IsContainerEmpty())
         {
             Debug.LogWarning("Halted beforehand");
@@ -119,11 +128,13 @@ public class SlotContainer : IContainer
 
     void OnTimedOperationUpdation(float progress)
     {
+        // track the current action progress
         this.functionProgression = progress;
     }
 
     void OnTimedOperationCompletion()
     {   
+        // apply the finished action to every item in the container
         for(int i = 0 ; i < this.dataManager.ContainerData.Length; i++)
         {   
             if(this.dataManager.ContainerData[i] == null)
@@ -158,6 +169,7 @@ public class SlotContainer : IContainer
 
     void ServeAction()
     {
+        // serve the current counter order if the items match
         var counter = this.associatedInteractable as CounterInteractable;
 
         if(counter == null)
@@ -181,18 +193,21 @@ public class SlotContainer : IContainer
 
     public void GetConfigInfo(out string title, out ContainerFunctionType funcType)
     {
+       // expose the config info to reflection views
        title = m_data.ContainerName;
        funcType = m_data.ContainerFunction;
     }
 
     public void GetFunctionCompletionStat(out float progression , out float completionTime)
     {
+        // report the current action progress
         progression = this.functionProgression;
         completionTime = this.functionCompletionTime;
     }
 
     public Order GetCounterOrder()
     {
+        // ask the counter for its current order
         if(this.associatedInteractable is CounterInteractable)
         {
             return ((CounterInteractable) this.associatedInteractable).GetOrder();
@@ -206,6 +221,7 @@ public class SlotContainer : IContainer
 
     public void ResetContainer()
     {
+        // clear the container and stop any running action
         this.CloseContainer();
         if(IsContainerLocked)
         {

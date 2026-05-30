@@ -1,6 +1,7 @@
 using UnityEngine;
 [RequireComponent(typeof(CharacterController))]
 
+// drives player movement and body rotation
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] PlayerStatData playerData;
@@ -19,12 +20,14 @@ public class PlayerController : MonoBehaviour
 
     private void Awake()
     {
+        // cache the controller and camera once
         cc = GetComponent<CharacterController>();
         cam = Camera.main;
     }
 
     private void OnEnable()
     {   
+        // listen for the game state changes that affect movement
         EventManager.OnGameStarted.AddListener(ResetTransform);
         EventManager.OnGameStarted.AddListener(EnableInteraction);
         EventManager.OnGamePaused.AddListener(DisableInteraction);
@@ -36,28 +39,32 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
+        // remember the spawn point for new rounds
         startPosition = this.transform.position;
         startRotation = this.transform.rotation;
     }
 
     void Update()
     {   
+        // read input and steer the body each frame
         PollInputs();
         GetIntendedDirection();
 
-        //--------------
+        // keep the body facing the travel direction
 
         BodyRotationPass();
     }
 
     void FixedUpdate()
     {
+        // apply the movement using fixed timing
         CalculateVelocity();
     }
 
     #region Locomotion
     void PollInputs()
     {   
+        // ignore movement while the player is inactive
         if(!isActive)
         {   
             inputDirection = Vector3.zero;
@@ -70,12 +77,14 @@ public class PlayerController : MonoBehaviour
 
     void GetIntendedDirection()
     {
+        // project input onto the ground plane
         intendedDirection = cam.transform.TransformDirection(inputDirection);
         intendedDirection = Vector3.ProjectOnPlane(intendedDirection, Vector3.up);
     }
 
     void CalculateVelocity()
     {
+        // build the current velocity toward the target speed
         targetVelocity = intendedDirection.normalized * playerData.MaxSpeed;
 
         if (targetVelocity.sqrMagnitude > 0)
@@ -96,6 +105,7 @@ public class PlayerController : MonoBehaviour
     #region BodyRotation
     void BodyRotationPass()
     {   
+        // rotate the body only when there is movement input
         if(inputDirection.sqrMagnitude <= 0.01f)
             return;
 
@@ -109,28 +119,33 @@ public class PlayerController : MonoBehaviour
 
     void LateUpdate()
     {   
+        // move the controller after the other motion passes
         cc.Move(currentVelocity * Time.deltaTime);
     }
 
     #region OTHERS
     Vector3 GetAccelaration()
     {
+        // push the current speed toward the target speed
         Vector3 accDir = targetVelocity - currentVelocity;
         return accDir.normalized * playerData.Accelaration;
     }
     
     void ResetTransform()
     {
+        // return the player to the start of the round
         this.transform.SetPositionAndRotation(startPosition, startRotation);
     }
 
     void EnableInteraction()
     {
+        // allow movement again
         isActive = true;
     }
 
     void DisableInteraction()
     {
+        // freeze movement and clear any carried velocity
         isActive = false;
         lastVelocity = currentVelocity = Vector3.zero;
     }
@@ -139,6 +154,7 @@ public class PlayerController : MonoBehaviour
 
     void OnDisable()
     {   
+        // remove the shared event hooks
         EventManager.OnGameStarted.RemoveListener(ResetTransform);
         EventManager.OnGameStarted.RemoveListener(EnableInteraction);
         EventManager.OnGamePaused.RemoveListener(DisableInteraction);

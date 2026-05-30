@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using AYellowpaper.SerializedCollections;
 [CreateAssetMenu(fileName = "ContainerConfig", menuName = "Scriptable Objects/ContainerConfig")]
+// container setup and interaction rules
 public class ContainerConfig : ScriptableObject
 {   
     [field : SerializeField] public string ContainerName
@@ -65,6 +66,7 @@ public class ContainerConfig : ScriptableObject
 
 public enum ContainerFunctionType
 {
+    // the actions a container can perform
     NONE,
     SLICE,
     COOK,

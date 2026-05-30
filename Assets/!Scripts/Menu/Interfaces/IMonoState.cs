@@ -1,3 +1,4 @@
+// defines the life cycle shared by menu states
 public interface IMonoState
 {
     public bool IsAlreadyTriggered

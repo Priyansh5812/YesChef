@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: GameConfig
   m_EditorClassIdentifier: Assembly-CSharp::GameConfig
   <GameTime>k__BackingField:
-    Mins: 2
-    Secs: 0
+    Mins: 0
+    Secs: 30

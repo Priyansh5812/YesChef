@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
+// manages counter orders and the counter view
 public class CounterInteractable : KitchenInteractable
 {   
 
@@ -14,6 +15,7 @@ public class CounterInteractable : KitchenInteractable
 
     protected override void OnEnable()
     {   
+        // prepare an order object when the counter wakes up
         base.OnEnable();
         order ??= new();
         order.Initialize();
@@ -21,15 +23,17 @@ public class CounterInteractable : KitchenInteractable
 
     protected override void Start()
     {   
+        // build the view once the scene is ready
         base.Start();
         view ??= new(this , this.viewData);
     }
 
-#region ORDER
+#region order
     public Order GetOrder() => this.order;
 
     public void DispatchOrder(List<KitchenItem> orderItems)
     {   
+        // clear the old order and start a fresh timer
         ClearOrder();
         order?.AddItems(orderItems);
         InitializeOrderView();
@@ -39,11 +43,13 @@ public class CounterInteractable : KitchenInteractable
 
     void InitializeOrderView()
     {
+        // refresh the counter visuals from the active order
         view?.RefreshOrderView(this.order);
     }
 
     public bool ValidateOrder(KitchenItem[] items)
     {   
+        // make sure the served items match the order list
         int size = order.Count;
 
         if(size == 0)
@@ -59,12 +65,14 @@ public class CounterInteractable : KitchenInteractable
 
     public void ServeOrder()
     {
+        // send the served order to the scoring flow
         EventManager.PreOrderServed.Invoke(new OrderServeData(this, this.order , this.secsElapsedFromOrder));
         ClearOrder();
     }
 
     public void ClearOrder()
     {   
+        // stop the timer and hide the active order
         if(orderTimerRoutine != null)
         {
             StopCoroutine(orderTimerRoutine);
@@ -78,6 +86,7 @@ public class CounterInteractable : KitchenInteractable
     
     IEnumerator OrderTimerRoutine()
     {
+        // track how long the order has been waiting
         while(true)
         {   
             while(isPaused)
@@ -96,6 +105,7 @@ public class CounterInteractable : KitchenInteractable
 
     public void SetPauseRunningOrder(bool value)
     {
+        // pause or resume the order timer
         isPaused = value;
     }
 
@@ -104,11 +114,13 @@ public class CounterInteractable : KitchenInteractable
 
     public void DisplayScore(int scoreAmt)
     {
+        // show the score gained from the served order
         Debug.Log($"Score : +{scoreAmt}");
     }
 
     protected override void OnDisable()
     {   
+        // dispose the order when the counter goes away
         base.OnDisable();
         order?.Dispose();
     }

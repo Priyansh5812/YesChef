@@ -1,6 +1,7 @@
 using UnityEngine.Pool;
 using UnityEngine.UI;
 using System.Collections.Generic;
+// stores the list of items that make up one order
 public class Order : System.IDisposable
 {   
     List<KitchenItem> orderItems;   
@@ -11,16 +12,19 @@ public class Order : System.IDisposable
     
     public void Initialize()
     {
+        // grab a pooled list for the current order
         this.orderItems ??= ListPool<KitchenItem>.Get();
     }
 
     public void AddItems(List<KitchenItem> items)
     {
+        // copy the order items into the active list
         orderItems.AddRange(items);
     }
 
     public void ClearOrderItems()
     {
+        // remove all items without releasing the pool
         orderItems.Clear();
     }
 
@@ -28,6 +32,7 @@ public class Order : System.IDisposable
 
     public bool IsOrderItemEqual(KitchenItem item, int targetIndex)
     {   
+        // compare one order slot against the provided item
         if(item == null)
             return false;
 
@@ -39,12 +44,14 @@ public class Order : System.IDisposable
 
     public void GetOrderItems(List<KitchenItem> ls)
     {
+        // copy the order into another list
         ls.AddRange(orderItems);
     }
     
 
     public void Dispose()
     {
+        // return the pooled list when the order is done
         if(this.orderItems != null)
         {
             ListPool<KitchenItem>.Release(this.orderItems);

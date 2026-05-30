@@ -1,3 +1,4 @@
+// updates the counter ui
 public class CounterView
 {
     CounterInteractable interactable;
@@ -5,17 +6,20 @@ public class CounterView
 
     public CounterView(CounterInteractable interactable, CounterViewData data)
     {
+        // keeps the interactable and view data together
         this.interactable = interactable;
         this.data = data;
     }
 
     public void UpdateCounterTimer(string str)
     {   
+        // show the current order timer
         this.data.timerText?.SetText(str);
     }
 
     public void RefreshOrderView(Order order)
     {
+        // mirror the current order into the ui
         int size = order.Count;
         for(int i = size; i < data.orderImages.Length; i++)
         {
@@ -33,6 +37,7 @@ public class CounterView
 
     public void ToggleOrderView(bool isActive)
     {
+        // show or hide the counter panel
         data.cgMain.alpha = isActive ? 1.0f : 0.0f;
     }
 

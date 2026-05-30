@@ -1,5 +1,6 @@
 using UnityEngine;
 using System;
+// contract used by all container like objects
 public interface IContainer
 {   
     public void UpdateReflection(ContainerReflectionSystem reflection);

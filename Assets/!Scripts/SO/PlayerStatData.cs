@@ -1,6 +1,7 @@
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "PlayerMovementData", menuName = "Scriptable Objects/PlayerMovementData")]
+// movement tuning for the player
 public class PlayerStatData : ScriptableObject
 {
     [Header("Locomotion-Based")]

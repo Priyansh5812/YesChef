@@ -1,8 +1,10 @@
 using System;
 using UnityEngine;
 
+// central event hub for gameplay and ui flow
 public static class EventManager
 {
+    // shared references for the container views
     public static FuncEvent<ContainerReflectionSystem> GetInventoryReflectionReference
     {
         get; private set;
@@ -12,6 +14,7 @@ public static class EventManager
         get; private set;
     } = new();
     
+    // container life cycle events
     public static ActionEvent OnContainerOpened
     {
         get; private set;
@@ -22,11 +25,13 @@ public static class EventManager
         get; private set;
     } = new();
     
+    // ui refresh for container reflections
     public static ActionEvent RefreshContainerReflections
     {
         get; private set;
     } = new();
-
+    
+    // order and game flow events
     public static ActionEvent<OrderServeData> PreOrderServed
     {
         get; private set;
@@ -59,6 +64,7 @@ public static class EventManager
 
 }
 
+// action events with no payload
 public class ActionEvent
 {
     private event Action baseAction;
@@ -69,6 +75,8 @@ public class ActionEvent
 
     public void RemoveListener(Action action) => baseAction -= action;
 }
+
+// action events with one value
 public class ActionEvent<T1>
 {
     private event Action<T1> baseAction;
@@ -81,6 +89,8 @@ public class ActionEvent<T1>
 
 
 }
+
+// action events with two values
 public class ActionEvent<T1, T2>
 {
     private event Action<T1, T2> baseAction;
@@ -91,6 +101,7 @@ public class ActionEvent<T1, T2>
     public void RemoveListener(Action<T1, T2> action) => baseAction -= action;
 }
 
+// function events that return one value
 public class FuncEvent<T1>
 {
     private event Func<T1> baseFunc;
@@ -103,6 +114,7 @@ public class FuncEvent<T1>
 
 }
 
+// function events that return a mapped value
 public class FuncEvent<T1 , T2>
 {
     private event Func<T1 , T2> baseFunc;
@@ -115,6 +127,7 @@ public class FuncEvent<T1 , T2>
 
 }
 
+// function events that return a third value
 public class FuncEvent<T1, T2, T3>
 {
     private event Func<T1, T2, T3> baseFunc;
