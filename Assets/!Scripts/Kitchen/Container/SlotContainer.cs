@@ -27,7 +27,7 @@ public class SlotContainer : IContainer
         this.associatedInteractable = interactable;
     }
 
-    public void UpdateReflection(ContainerReflectionSystem reflection)
+    public void UpdateReflection(IContainerReflectionSystem reflection)
     {   
         // push the current container data into the reflection view
         reflection.ReflectContainer(dataManager.ContainerData , this);
@@ -46,7 +46,7 @@ public class SlotContainer : IContainer
         if(IsContainerLocked && !m_data.IsFunctionPassive)
             return;
 
-        if(ContainerReflectionSystem.IsUnderDragOperation)
+        if(IContainerReflectionSystem.IsUnderDragOperation)
             return;
 
         EventManager.OnContainerClosed.Invoke();
@@ -222,7 +222,9 @@ public class SlotContainer : IContainer
     public void ResetContainer()
     {
         // clear the container and stop any running action
-        this.CloseContainer();
+        if(this.IsOpened)
+            this.CloseContainer();
+            
         if(IsContainerLocked)
         {
             this.associatedInteractable.StopAllCoroutines();

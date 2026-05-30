@@ -19,7 +19,7 @@ public class KitchenInteractable : MonoBehaviour
     [Header("Stats")]
     [SerializeField] protected ContainerConfig m_data;
     protected SlotContainer container;
-    protected ContainerReflectionSystem reflection;
+    protected IContainerReflectionSystem reflection;
 
     protected virtual void Awake()
     {
@@ -43,7 +43,7 @@ public class KitchenInteractable : MonoBehaviour
     void InitListeners()
     {
         // close the container when the round ends
-        EventManager.OnGameOver.AddListener(ForceContainerClosure);
+        EventManager.OnGameOver.AddListener(ForceContainerReset);
     }
 
     Vector3 GetInteractionDirection() => this.transform.TransformDirection(this.referenceInteractionDirection);
@@ -126,19 +126,15 @@ public class KitchenInteractable : MonoBehaviour
         OnTimerCompletion?.Invoke();
     }
 
-    void ForceContainerClosure()
+    void ForceContainerReset()
     {
-        // clear the container when the game ends
-        if(this.container.IsOpened)
-        {   
-            this.container.ResetContainer();
-        }
+        this.container.ResetContainer();
     }
 
     void DeInitListeners()
     {
         // remove shared listeners before shutdown
-        EventManager.OnGameOver.RemoveListener(ForceContainerClosure);
+        EventManager.OnGameOver.RemoveListener(ForceContainerReset);
     }
 
     protected virtual void OnDisable()

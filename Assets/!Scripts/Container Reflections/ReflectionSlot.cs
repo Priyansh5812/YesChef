@@ -2,39 +2,44 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
+// handles one draggable reflection slot
 public class ReflectionSlot : MonoBehaviour , IBeginDragHandler , IEndDragHandler, IDragHandler , IDropHandler
 {   
     Canvas m_canvas;
     [SerializeField] Image image;
         
-    ContainerReflectionSystem system;    
+    IContainerReflectionSystem system;    
 
     ReflectionKitchenItem item;
 
 
     void Start()
     {   
+        // cache the local canvas and system
         InitializeComponents();
     }
 
     void InitializeComponents()
     {   
+        // resolve the canvas and container system
         if(m_canvas == null)
             m_canvas = this.GetComponentInParent<Canvas>();
 
         if(system == null)
-            system = this.GetComponentInParent<ContainerReflectionSystem>();
+            system = this.GetComponentInParent<IContainerReflectionSystem>();
 
     }
 
     public void InitializeSlot(KitchenItem item, int index)
     {   
+        // load the item into this slot
         this.item = new(item, index);
         UpdateSlotView();
     }
 
     void UpdateSlotView()
     {   
+        // update the icon and visibility
         image.sprite = this.item.item == null ? null : this.item.item.sprite;
         image.color = this.item.item == null ? Color.clear : Color.white;
     }
@@ -43,32 +48,36 @@ public class ReflectionSlot : MonoBehaviour , IBeginDragHandler , IEndDragHandle
     #region DRAG - DROP
     public void OnBeginDrag(PointerEventData eventData)
     {   
+        // start moving the item with the cursor
         this.image.rectTransform.anchoredPosition += eventData.delta / m_canvas.scaleFactor;
         m_canvas.sortingOrder++;
         this.image.rectTransform.SetParent(this.transform.parent);
-        ContainerReflectionSystem.IsUnderDragOperation = true;
-        ContainerReflectionSystem.ActiveTransferRequest = PrepareItemTransferRequest(); 
+        IContainerReflectionSystem.IsUnderDragOperation = true;
+        IContainerReflectionSystem.ActiveTransferRequest = PrepareItemTransferRequest(); 
     }
 
     public void OnDrag(PointerEventData eventData)
     {
+        // keep the item following the pointer
         this.image.rectTransform.anchoredPosition += eventData.delta / m_canvas.scaleFactor;
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {   
+        // snap the item back into place
         this.image.rectTransform.SetParent(this.transform);
         this.image.rectTransform.anchoredPosition = Vector2.zero;
         m_canvas.sortingOrder--;
-        ContainerReflectionSystem.IsUnderDragOperation = false;
-        ContainerReflectionSystem.ActiveTransferRequest = null;
+        IContainerReflectionSystem.IsUnderDragOperation = false;
+        IContainerReflectionSystem.ActiveTransferRequest = null;
     }
 
     public void OnDrop(PointerEventData eventData)
     {
+        // try to swap items between containers
         Debug.LogWarning("Dropped on "+ eventData.pointerDrag.gameObject.name);
         
-        var req = ContainerReflectionSystem.ActiveTransferRequest;
+        var req = IContainerReflectionSystem.ActiveTransferRequest;
 
         if(this.system.associatedContainer == req.Value.associatedContainer)
             return;
@@ -86,6 +95,7 @@ public class ReflectionSlot : MonoBehaviour , IBeginDragHandler , IEndDragHandle
     
     KitchenItemTransferRequest PrepareItemTransferRequest()
     {
+        // build the current transfer request
         return new KitchenItemTransferRequest(this.item.item , system.associatedContainer, this.item.originalArrayIndex);
     }
 

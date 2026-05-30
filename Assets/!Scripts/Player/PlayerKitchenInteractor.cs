@@ -6,7 +6,7 @@ public class PlayerKitchenInteractor : MonoBehaviour
     [SerializeField] ContainerConfig inventoryConfig;
     KitchenInteractable currentInteractable = null;
     SlotContainer inventoryContainer;
-    ContainerReflectionSystem inventoryReflection;
+    IContainerReflectionSystem inventoryReflection;
 
     // tracks whether the player may interact
     bool canInteract;
@@ -24,6 +24,7 @@ public class PlayerKitchenInteractor : MonoBehaviour
         EventManager.OnGamePaused.AddListener(DisableInteraction);
         EventManager.OnGameResumed.AddListener(EnableInteraction);
         EventManager.OnGameOver.AddListener(DisableInteraction);
+        EventManager.OnGameOver.AddListener(ForceContainerReset);
         EventManager.RefreshContainerReflections.AddListener(RefreshInventoryReflection);
     }
 
@@ -98,6 +99,11 @@ public class PlayerKitchenInteractor : MonoBehaviour
         canInteract = false;
     }
 
+    void ForceContainerReset()
+    {
+        this.inventoryContainer.ResetContainer();
+    }
+
     void DeInitListeners()
     {   
         // remove all shared listeners before shutdown
@@ -105,6 +111,7 @@ public class PlayerKitchenInteractor : MonoBehaviour
         EventManager.OnGamePaused.RemoveListener(DisableInteraction);
         EventManager.OnGameResumed.RemoveListener(EnableInteraction);
         EventManager.OnGameOver.RemoveListener(DisableInteraction);
+        EventManager.OnGameOver.RemoveListener(ForceContainerReset);
         EventManager.RefreshContainerReflections.RemoveListener(RefreshInventoryReflection);
     }
 

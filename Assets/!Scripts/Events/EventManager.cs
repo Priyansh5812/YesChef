@@ -5,11 +5,11 @@ using UnityEngine;
 public static class EventManager
 {
     // shared references for the container views
-    public static FuncEvent<ContainerReflectionSystem> GetInventoryReflectionReference
+    public static FuncEvent<IContainerReflectionSystem> GetInventoryReflectionReference
     {
         get; private set;
     } = new();
-    public static FuncEvent<ContainerReflectionSystem> GetKitchenContainerReflectionReference
+    public static FuncEvent<IContainerReflectionSystem> GetKitchenContainerReflectionReference
     {
         get; private set;
     } = new();

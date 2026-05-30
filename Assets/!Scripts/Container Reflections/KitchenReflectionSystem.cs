@@ -1,62 +1,58 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using System.Collections;
-public class ContainerReflectionSystem : MonoBehaviour
+
+// builds the kitchen reflection view
+public class KitchenReflectionSystem : MonoBehaviour, ITickableReflectionSystem
 {   
+    // title and action controls for the active container
     [SerializeField] TextMeshProUGUI title;
     [SerializeField] TextMeshProUGUI actionTitle;
     [SerializeField] Button actionBtn;
     [SerializeField] TextMeshProUGUI timeRemaining;
     [SerializeField] Slider loadingSlider;
-    [SerializeField] bool canTickProgression;
     [SerializeField] GameObject OrdersParent;
 
-
-    Coroutine ProgressionTickRoutine = null;
+    OrderReflectionSlot[] orderSlots;
 
     ReflectionSlot[] slots;
-    OrderReflectionSlot[] orderSlots;
+
     public IContainer associatedContainer
     {
+        // container currently shown in the kitchen panel
         get; private set;
     }
 
-    public static KitchenItemTransferRequest? ActiveTransferRequest
-    {
-        get; set;
-    } = null;
+    Coroutine ProgressionTickRoutine;
 
-    public static bool IsUnderDragOperation
-    {
-        get;  set;
-    } = false;
 
     void Awake()
     {
+        // cache the slot views once
         slots = this.GetComponentsInChildren<ReflectionSlot>();
-        if(OrdersParent != null)
-            orderSlots = this.OrdersParent.transform.GetComponentsInChildren<OrderReflectionSlot>();
+        orderSlots = this.OrdersParent.transform.GetComponentsInChildren<OrderReflectionSlot>();
     }
 
+    
     void OnEnable()
     {
+        // hook up the shared listeners
         InitListeners();
 
     }
     
     void InitListeners()
     {
+        // react to game flow and action button clicks
         EventManager.OnGameOver.AddListener(StopProgressionTick);
         EventManager.OnGameStarted.AddListener(InitiateProgressionTick);
         actionBtn?.onClick.AddListener(PerformContainerAction);
     }
 
-
-
-
-    public void ReflectContainer(KitchenItem[] items , IContainer container)
-    {   
+    public void ReflectContainer(KitchenItem[] items, IContainer container)
+    {
+        // mirror the active container into the view
         associatedContainer = container;
         associatedContainer.GetConfigInfo(out string title , out var funcType);
 
@@ -71,16 +67,14 @@ public class ContainerReflectionSystem : MonoBehaviour
         {
             ReflectAsKitchenContainer(items);
         }
-
-        SetupTitle(title);
         SetupFunctionAuthority(funcType);
+        SetupTitle(title);
     }
-
 
     void ReflectAsCounterContainer(KitchenItem[] items)
     {
-        if(this.OrdersParent != null)
-            this.OrdersParent?.SetActive(true);
+        // show the current order and matching items
+        this.OrdersParent.SetActive(true);
 
         Order order = this.associatedContainer.GetCounterOrder();
         foreach(var i in orderSlots)
@@ -119,8 +113,8 @@ public class ContainerReflectionSystem : MonoBehaviour
     
     void ReflectAsKitchenContainer(KitchenItem[] items)
     {   
-        if(this.OrdersParent != null)
-            this.OrdersParent?.SetActive(false);
+        // show a regular kitchen container
+        this.OrdersParent.SetActive(false);
             
         if(items.Length > slots.Length)
         {
@@ -138,17 +132,15 @@ public class ContainerReflectionSystem : MonoBehaviour
     }
 
 
-
-    void SetupTitle(string title)
+    void SetupTitle(string str)
     {
-        this.title?.SetText(title);
+        // update the main label
+        this.title?.SetText(str);        
     }
 
-    void SetupFunctionAuthority(ContainerFunctionType functionType)
-    {   
-        if(this.actionBtn == null)
-            return;
-
+    public void SetupFunctionAuthority(ContainerFunctionType functionType)
+    {
+        // show the action button when the container supports one
         if(functionType == ContainerFunctionType.NONE)
         {
             this.actionBtn?.transform.parent.gameObject.SetActive(false);
@@ -158,25 +150,19 @@ public class ContainerReflectionSystem : MonoBehaviour
         this.actionTitle?.SetText(functionType.ToString());
     }
 
-
-
-    #region Container associated active function reflection
-
     bool isVisible = true;
 
     void InitiateProgressionTick()
     {   
-        if(!canTickProgression)
-            return;
-
+        // restart the action timer display
         StopProgressionTick();
-        if(canTickProgression)
-            ProgressionTickRoutine = StartCoroutine(ReflectContainerAssociatedActiveFunctions());
+        ProgressionTickRoutine = StartCoroutine(ReflectContainerAssociatedActiveFunctions());
     }
 
     IEnumerator ReflectContainerAssociatedActiveFunctions()
-    {
-        while(canTickProgression)
+    {   
+        // keep the progress ui in sync
+        while(true)
         {
             
             if(loadingSlider == null || timeRemaining == null || associatedContainer == null)
@@ -203,11 +189,22 @@ public class ContainerReflectionSystem : MonoBehaviour
             yield return null;
         }
 
-        ProgressionTickRoutine = null;
     }
+
+    void StopProgressionTick()
+    {   
+        // stop the timer ui routine
+        if(ProgressionTickRoutine != null)
+        {
+            StopCoroutine(ProgressionTickRoutine);
+            ProgressionTickRoutine = null;
+        }
+    }
+
 
     void HideProgressionPanel()
     {   
+        // hide the progress display when idle
         if(!isVisible)
             return;
 
@@ -218,6 +215,7 @@ public class ContainerReflectionSystem : MonoBehaviour
 
     void DisplayProgressionPanel()
     {   
+        // show the progress display when active
         if(isVisible)
             return;
 
@@ -225,25 +223,15 @@ public class ContainerReflectionSystem : MonoBehaviour
         isVisible = true;
     }
 
-    
-    #endregion
-
     void PerformContainerAction()
     {
+        // ask the container to run its action
         associatedContainer?.PerformAction();
-    }
-
-    void StopProgressionTick()
-    {   
-        if(ProgressionTickRoutine != null)
-        {
-            StopCoroutine(ProgressionTickRoutine);
-            ProgressionTickRoutine = null;
-        }
     }
 
     void DeInitListeners()
     {   
+        // remove the shared hooks
         EventManager.OnGameOver.RemoveListener(StopProgressionTick);
         EventManager.OnGameStarted.RemoveListener(InitiateProgressionTick);
         actionBtn?.onClick.RemoveListener(PerformContainerAction);
@@ -251,7 +239,8 @@ public class ContainerReflectionSystem : MonoBehaviour
 
     void OnDisable()
     {
+        // clean up when the view is disabled
         DeInitListeners();
-
     }
+
 }
