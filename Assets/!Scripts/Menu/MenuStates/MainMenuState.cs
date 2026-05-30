@@ -42,7 +42,8 @@ public class MainMenuState : IMonoState
     }
 
     void StartGame()
-    {
+    {   
+        Cursor.lockState = CursorLockMode.Locked;
         // move the player into gameplay
         driver.InitiateStateChange(typeof(GameState));
     }

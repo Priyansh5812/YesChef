@@ -1,17 +1,21 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-
+using System.Threading.Tasks;
 // manages counter orders and the counter view
 public class CounterInteractable : KitchenInteractable
 {   
 
     [SerializeField] CounterViewData viewData;
+    [SerializeField, Range(1f , 5f)] float ScoreDisplayDuration = 2.0f;
+
     Order order;
     CounterView view;
     Coroutine orderTimerRoutine = null;
     float secsElapsedFromOrder;
     bool isPaused;
+    bool isDisplayingScore;
+
 
     protected override void OnEnable()
     {   
@@ -25,7 +29,9 @@ public class CounterInteractable : KitchenInteractable
     {   
         // build the view once the scene is ready
         base.Start();
-        view ??= new(this , this.viewData);
+        view ??= new(this.viewData);
+        view.UpdateCounterTimer("--:--");
+        view.UpdateScoreView(string.Empty , 0);
     }
 
 #region order
@@ -81,7 +87,6 @@ public class CounterInteractable : KitchenInteractable
         order?.ClearOrderItems();
         view.UpdateCounterTimer("--:--");
         view.ToggleOrderView(false);
-       
     }
     
     IEnumerator OrderTimerRoutine()
@@ -110,13 +115,28 @@ public class CounterInteractable : KitchenInteractable
     }
 
 
-#endregion
+#endregion    
 
-    public void DisplayScore(int scoreAmt)
-    {
-        // show the score gained from the served order
-        Debug.Log($"Score : +{scoreAmt}");
+    public async void DisplayScore(int scoreAmt)
+    {   
+        string str = scoreAmt.ToString();
+
+        this.view.UpdateScoreView(str , scoreAmt);
+
+        if(isDisplayingScore)
+        {
+            return;
+        }
+
+        isDisplayingScore = true;
+
+        await Task.Delay(Mathf.FloorToInt(this.ScoreDisplayDuration * 1000));
+        
+        this.view.UpdateScoreView(string.Empty , scoreAmt);
+        isDisplayingScore = false;
     }
+    
+
 
     protected override void OnDisable()
     {   

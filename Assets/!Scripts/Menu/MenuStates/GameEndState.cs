@@ -61,13 +61,14 @@ public class GameEndState : IMonoState
         PlayerPrefs.SetInt(Constants.HighScore , highScore);
 
         data.scoreText?.SetText($"Score : {driver.SessionScore}");
-        data.highscoreText?.SetText($"Score : {highScore}");
+        data.highscoreText?.SetText($"HighScore : {highScore}");
     
     }
 
     void RestartGame()
     {
         // send the player back into gameplay
+        Cursor.lockState = CursorLockMode.Locked;
         driver.InitiateStateChange(typeof(GameState));
     }
 

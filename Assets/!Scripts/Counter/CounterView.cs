@@ -1,13 +1,12 @@
+using System.Threading.Tasks;
+
 // updates the counter ui
 public class CounterView
 {
-    CounterInteractable interactable;
     CounterViewData data;
-
-    public CounterView(CounterInteractable interactable, CounterViewData data)
+    bool isDisplayingScore;
+    public CounterView(CounterViewData data)
     {
-        // keeps the interactable and view data together
-        this.interactable = interactable;
         this.data = data;
     }
 
@@ -41,6 +40,15 @@ public class CounterView
         data.cgMain.alpha = isActive ? 1.0f : 0.0f;
     }
 
-
+    public void UpdateScoreView(string str ,int scoreAmt)
+    {   
+        if(str != string.Empty)
+        {
+            this.data.pointsText.color = scoreAmt <= 0 ? this.data.badScoreColor : this.data.goodScoreColor;
+            str = (scoreAmt < 0 ? "-" : "+")+str;
+        }
+        
+        this.data.pointsText?.SetText(str);
+    }
 
 }

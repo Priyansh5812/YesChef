@@ -9,6 +9,7 @@ public class GameState : IMonoState
     bool isGamePaused;
     float remainingSecs;
     int score;
+    
 
     // keep the play session pieces together
     public GameState(MenuStateDriver driver, GameStateData data, GameConfig config)
@@ -47,7 +48,6 @@ public class GameState : IMonoState
     void PrepareStartup()
     {   
         // reset the round and either resume or start fresh
-        Cursor.lockState = CursorLockMode.Locked;
         ToggleView(true);
         
         if(isGamePaused)

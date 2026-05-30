@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 547e1ba3232f111408b49dc0f082e205, type: 3}
   m_Name: PlayerMovementData
   m_EditorClassIdentifier: Assembly-CSharp::PlayerStatData
-  MaxSpeed: 7.75
+  MaxSpeed: 8.5
   Accelaration: 75
   Deacclaration: 0.75
   bodyRotationSpeed: 4

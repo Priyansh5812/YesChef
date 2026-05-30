@@ -5,6 +5,8 @@ public class PauseMenuState : IMonoState
     readonly MenuStateDriver driver;
     readonly PauseMenuStateData data;
 
+    CursorLockMode lastLockMode;
+
     // keep the driver and pause data together
     public PauseMenuState(MenuStateDriver driver, PauseMenuStateData data)
     {
@@ -23,6 +25,7 @@ public class PauseMenuState : IMonoState
         InitListeners();
         ToggleView(true);
         EventManager.OnGamePaused.Invoke();
+        lastLockMode = Cursor.lockState;
         Cursor.lockState = CursorLockMode.Confined;
         OnEnableCompleted?.Invoke();
     }
@@ -49,7 +52,8 @@ public class PauseMenuState : IMonoState
     }
 
     void ResumeGame()
-    {
+    {       
+        Cursor.lockState = lastLockMode;
         // return to gameplay from the pause screen
         this.driver.InitiateStateChange(typeof(GameState));
     }

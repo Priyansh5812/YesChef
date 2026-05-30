@@ -5,7 +5,7 @@ public interface IContainer
 {   
     public void UpdateReflection(IContainerReflectionSystem reflection);
     public void OpenContainer();
-    public void CloseContainer();
+    public void CloseContainer(bool byPassChecks);
     public bool ProcessContainerRequest(IContainerRequest req);
     public void PerformAction();
     public void GetConfigInfo(out string title , out ContainerFunctionType funcType);

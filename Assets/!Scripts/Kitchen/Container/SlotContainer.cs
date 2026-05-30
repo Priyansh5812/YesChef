@@ -40,13 +40,13 @@ public class SlotContainer : IContainer
         IsOpened = true;
     }
     
-    public void CloseContainer()
+    public void CloseContainer(bool byPassChecks = false)
     {   
         // respect locked actions and active drag operations
-        if(IsContainerLocked && !m_data.IsFunctionPassive)
+        if(!byPassChecks && IsContainerLocked && !m_data.IsFunctionPassive)
             return;
 
-        if(IContainerReflectionSystem.IsUnderDragOperation)
+        if(!byPassChecks && IContainerReflectionSystem.IsUnderDragOperation)
             return;
 
         EventManager.OnContainerClosed.Invoke();
@@ -223,7 +223,7 @@ public class SlotContainer : IContainer
     {
         // clear the container and stop any running action
         if(this.IsOpened)
-            this.CloseContainer();
+            this.CloseContainer(true);
             
         if(IsContainerLocked)
         {
