@@ -19,11 +19,5 @@ public class OrderConfig : ScriptableObject
     [field : SerializeField , Range(2 , 20)] public int OrderDispatchCheckFreq
     {
         get; private set;
-    }
-
-    [field : SerializeField] public TimeSpan MaxOrderTime
-    {
-        get; private set;
-    }
-    
+    }    
 }
